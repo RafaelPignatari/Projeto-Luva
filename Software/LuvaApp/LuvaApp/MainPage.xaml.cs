@@ -2,6 +2,7 @@
 using LuvaApp.Helpers;
 using LuvaApp.Models;
 using LuvaApp.ViewModels;
+using LuvaApp.Views;
 
 namespace LuvaApp
 {
@@ -37,7 +38,7 @@ namespace LuvaApp
             TraduzSinalBtn.IsEnabled = false;
             TraduzSinalBtn.Text = "Atualizando automaticamente predict";
 
-            Task.Run(() =>
+            Task.Run(async() =>
             {
                 while (true)
                 {
@@ -50,12 +51,8 @@ namespace LuvaApp
                             Sensores = new float[] { recebido.Flexao2, recebido.Acc_EixoX, recebido.Acc_EixoY },
                         };
 
-                        Task.Run(async () =>
-                        {
-                            var predict = await IAEmbarcadaController.Instancia.Predicao(input);
-
-                            await MainThread.InvokeOnMainThreadAsync(() => _posicaoViewModel.Posicao = predict);
-                        });
+                        var predict = await IAEmbarcadaController.Instancia.Predicao(input);
+                        await MainThread.InvokeOnMainThreadAsync(() => _posicaoViewModel.Posicao = predict);
                     }
                     catch (Exception ex)
                     {
@@ -65,6 +62,11 @@ namespace LuvaApp
                     Thread.Sleep(50);
                 }
             });
+        }
+
+        private void btnConfig_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new ConfigPage());
         }
     }
 }

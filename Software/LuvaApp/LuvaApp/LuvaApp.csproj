@@ -81,4 +81,10 @@
 	  <None Include="C:\Users\rafae\.nuget\packages\microsoft.ml.onnxruntime\1.17.0\buildTransitive\net6.0-android31.0\..\..\runtimes\android\native\onnxruntime.aar" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="Views\ConfigPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
