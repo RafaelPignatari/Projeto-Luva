@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LuvaApp.Views.ConfigPage"
+             xmlns:vm="clr-namespace:LuvaApp.ViewModels"
+             x:DataType="vm:ConfigurationViewModel"
+             x:Class="LuvaApp.Views.ConfigPage"             
              Title="Configuração">
     <VerticalStackLayout
         BackgroundColor="#D1F5FD">
@@ -13,7 +15,7 @@
                 RowDefinitions="*, *, *, *, *"
                 ColumnDefinitions="*, *">
                 <Label 
-                    Text="IA Utilizada:"
+                    Text="Processamento:"
                     TextColor="Black"
                     VerticalOptions="Center" 
                     HorizontalOptions="Start" 
@@ -23,19 +25,20 @@
                 <Picker
                     VerticalOptions="Center"
                     HorizontalOptions="End"
-                    BackgroundColor="White"
+                    BackgroundColor="Black"
                     Grid.Row="0"
                     Grid.Column="1"
-                    Margin="5">
+                    Margin="5"                    
+                    SelectedIndex="{Binding Processamento, Mode=TwoWay}">                    
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
-                            <x:String>Embarcada</x:String>
-                            <x:String>Consulta Online</x:String>
+                            <x:String>Local</x:String>
+                            <x:String>Remoto</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
                 <Label 
-                    Text="Taxa de Atualização:"
+                    Text="Emissão de som:"
                     TextColor="Black"
                     VerticalOptions="Center" 
                     HorizontalOptions="Start" 
@@ -45,89 +48,65 @@
                 <Picker
                     VerticalOptions="Center"
                     HorizontalOptions="End"
-                    BackgroundColor="White"
+                    BackgroundColor="Black"
                     Grid.Row="1"
                     Grid.Column="1"
-                    Margin="5">
+                    Margin="5"
+                    SelectedIndex="{Binding EmissaoSom}">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
-                            <x:String>Por Tempo</x:String>
-                            <x:String>Por Botão</x:String>
+                            <x:String>Manual</x:String>
+                            <x:String>Automático</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
-                </Picker>
-                <Label 
-                    Text="Tempo:"
-                    TextColor="Black"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Start" 
-                    FontSize="Body"
-                    Grid.Row="2"
-                    Grid.Column="0"/>
-                <Entry
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    TextColor="Black"
-                    HorizontalTextAlignment="Center"
-                    BackgroundColor="White"
-                    Placeholder="500"
-                    Keyboard="Numeric"
-                    Margin="5"
-                    Grid.Row="2"
-                    Grid.Column="1"/>
-                <!--<Label
-                    Text="ms"
-                    TextColor="Black"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Start" 
-                    FontSize="Body"
-                    Grid.Row="2"
-                    Grid.Column="2"/>-->
-                <Label 
-                    Text="Transmitir Som:"
-                    TextColor="Black"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Start" 
-                    FontSize="Body"
-                    Grid.Row="3"
-                    Grid.Column="0"/>
-                <Picker
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    BackgroundColor="White"
-                    Margin="5"
-                    Grid.Row="3"
-                    Grid.Column="1">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Ligado</x:String>
-                            <x:String>Desligado</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                </Picker>                
                 <Label 
                     Text="Exibir Histórico:"
                     TextColor="Black"
                     VerticalOptions="Center" 
                     HorizontalOptions="Start" 
                     FontSize="Body"
-                    Grid.Row="4"
+                    Grid.Row="2"
                     Grid.Column="0"/>
                 <Picker
                     VerticalOptions="Center"
                     HorizontalOptions="End"
-                    BackgroundColor="White"
+                    BackgroundColor="Black"
                     Margin="5"
-                    Grid.Row="4"
-                    Grid.Column="1">
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    SelectedIndex="{Binding HistoricoAtivo}"
+                    >
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
-                            <x:String>Ligado</x:String>
                             <x:String>Desligado</x:String>
+                            <x:String>Ligado</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
+
+                <Label 
+                    Text="Número de exibições:"
+                    TextColor="Black"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Start" 
+                    FontSize="Body"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    IsVisible="{Binding HistoricoAtivo}"/>
+                <Entry
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"
+                    BackgroundColor="Black"
+                    Margin="5"
+                    WidthRequest="70"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Keyboard="Numeric"
+                    Text="{Binding PrevisoesExibidasNoHistorico}"
+                    IsVisible="{Binding HistoricoAtivo}"/>
             </Grid>
+            
             <Button
                 x:Name="btnConfigBluetooth"
                 Text="Configurar Bluetooth"

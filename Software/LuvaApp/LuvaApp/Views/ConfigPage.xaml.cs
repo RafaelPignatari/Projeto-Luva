@@ -1,23 +1,35 @@
+using LuvaApp.Helpers;
+using LuvaApp.Models;
+using LuvaApp.ViewModels;
+
 namespace LuvaApp.Views;
 
 public partial class ConfigPage : ContentPage
 {
-	public ConfigPage()
-	{
-		InitializeComponent();
-	}
-
-    private void btnConfigBluetooth_Clicked(object sender, EventArgs e)
+    ConfigurationController configurationController = new ConfigurationController();
+    ConfigurationViewModel? configurationViewModel;
+    public ConfigPage()
     {
+        InitializeComponent();
         
+        ConfigurationModel configurationModel = configurationController.GetConfigurationAsync().Result;
+        configurationViewModel = new ConfigurationViewModel(configurationModel);
+        BindingContext = configurationViewModel;
     }
 
-    private void btnSalvar_Clicked(object sender, EventArgs e)
+    private async void btnConfigBluetooth_Clicked(object sender, EventArgs e)
     {
-        //TODO: Salvar configurações
+        //TODO: Navigate to Bluetoth configuration
+    }
 
-        DisplayAlert(Constantes.SUCESSO, Constantes.MSG_CONFIG_SALVA, Constantes.OK);
+    private async void btnSalvar_Clicked(object sender, EventArgs e)
+    {
+        if (!configurationViewModel.HistoricoAtivo)
+            configurationViewModel.PrevisoesExibidasNoHistorico = 0;
 
-        Navigation.PopAsync();
+        await configurationController.SetConfigurationAsync(new ConfigurationModel(configurationViewModel));
+
+        await DisplayAlert(Constantes.SUCESSO, Constantes.MSG_CONFIG_SALVA, Constantes.OK);
+        await Navigation.PopAsync();
     }
 }
