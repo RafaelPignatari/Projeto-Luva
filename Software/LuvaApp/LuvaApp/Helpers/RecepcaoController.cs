@@ -8,6 +8,16 @@ namespace LuvaApp.Helpers
 {
     public class RecepcaoController
     {
+        public static List<string> ListaRecepcaoCopy
+        {
+            get {
+                try
+                {
+                    return _listaRecepcao.Select(item => item.Replace(';', ',')).ToList();
+                } catch{ return new List<string>(); } 
+            }
+        }
+
         private static List<string> _listaRecepcao;
 
         #region SINGLETON
@@ -40,6 +50,7 @@ namespace LuvaApp.Helpers
             IService luvaService = await bluetoothController.ConnectedDevice.GetServiceAsync(Guid.Parse("00000015-0000-1000-8000-00805F9B34FB"));
             ICharacteristic luvaCharacteristic = (await luvaService.GetCharacteristicsAsync())[0];
 
+            _listaRecepcao = new List<string>();
             luvaCharacteristic.ValueUpdated -= ValueUpdatedHandler;
             luvaCharacteristic.ValueUpdated += ValueUpdatedHandler;
 
@@ -58,7 +69,6 @@ namespace LuvaApp.Helpers
         {
             var bytes = e.Characteristic.Value;
             var valor = Encoding.UTF8.GetString(bytes);
-
             AdicionaValorALista(valor);
         }
 
@@ -72,11 +82,18 @@ namespace LuvaApp.Helpers
             else
             {
                 valor = valor.Substring(1); //Removemos o primeiro caractere, referente ao index do pacote.
-                var ultimoValorAdicionado = _listaRecepcao.Last();
-                var indexUltimo = _listaRecepcao.IndexOf(ultimoValorAdicionado);
+                try
+                {
+                    var ultimoValorAdicionado = _listaRecepcao.Last();
+                    var indexUltimo = _listaRecepcao.IndexOf(ultimoValorAdicionado);
 
-                ultimoValorAdicionado += valor;
-                _listaRecepcao[indexUltimo] = ultimoValorAdicionado;
+                    ultimoValorAdicionado += valor;
+                    _listaRecepcao[indexUltimo] = ultimoValorAdicionado;
+                }
+                catch
+                {
+                    return;
+                }                
             }
 
             RemoveValorDaLista();
@@ -84,9 +101,42 @@ namespace LuvaApp.Helpers
 
         private void RemoveValorDaLista()
         {
-            if (_listaRecepcao.Count > 10)
+            if (_listaRecepcao.Count > 5)
             {
                 _listaRecepcao.RemoveAt(0);
+            }
+        }
+
+        public static async void sendDataThroughAPI(string dados)
+        {
+            string url = "http://127.0.0.1:5000/receiveValues";
+           var myData = new
+           {
+               values = dados
+           };
+            string jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(myData);
+            StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+
+                    HttpResponseMessage response = await client.PostAsync(url, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine(responseBody);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Erro: {response.StatusCode}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ocorreu um erro: {ex.Message}");
+                }
             }
         }
     }

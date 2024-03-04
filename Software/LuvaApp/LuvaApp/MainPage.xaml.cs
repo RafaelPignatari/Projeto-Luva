@@ -24,7 +24,6 @@ namespace LuvaApp
             await bluetoothController.AsyncRequestBluetoothPermissions();
             await bluetoothController.AsyncConnectToDeviceByName("LuvaController");
 
-            CharacteristicBluetoothBtn.IsEnabled = true;
             TraduzSinalBtn.IsEnabled = true;
         }
 
@@ -37,13 +36,18 @@ namespace LuvaApp
         {
             TraduzSinalBtn.IsEnabled = false;
             TraduzSinalBtn.Text = "Atualizando automaticamente predict";
-
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
                 while (true)
                 {
+                    await MainThread.InvokeOnMainThreadAsync(async () => await bluetoothController.AsyncRequestBluetoothPermissions());
+                    await MainThread.InvokeOnMainThreadAsync(async () => await bluetoothController.AsyncConnectToDeviceByName("LuvaController"));
+                    await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController);
+
                     try
                     {
+                        TraduzSinalBtn.IsEnabled = true;
+
                         var recebido = RecepcaoController.Instancia.ObtemUltimoValorRecebido();
 
                         var input = new OnnxInput
@@ -56,7 +60,7 @@ namespace LuvaApp
                     }
                     catch (Exception ex)
                     {
-                       //TODO: Adicionar logs
+                        //TODO: Adicionar logs
                     }
 
                     Thread.Sleep(50);
@@ -64,9 +68,26 @@ namespace LuvaApp
             });
         }
 
+        private void btnSom_Clicked(object sender, EventArgs e)
+        {
+            bool novaPosicao  = !_posicaoViewModel.SomImage.EndsWith("1.png");
+            _posicaoViewModel.SomImage = "volume" + Convert.ToInt32(novaPosicao) + ".png";
+        }
+
+        private void randomLetter()
+        {
+            string letraPng  = "letra_" + (char)new Random().Next(97, 123) + ".png";
+            _posicaoViewModel.LetraImagem = letraPng;
+        }
+
         private void btnConfig_Clicked(object sender, EventArgs e)
         {
             Navigation.PushAsync(new ConfigPage());
+        }
+
+        private void btnTraining_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new TrainingPage());
         }
     }
 }

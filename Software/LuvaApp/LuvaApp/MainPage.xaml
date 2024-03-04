@@ -5,58 +5,52 @@
              x:Class="LuvaApp.MainPage"
              x:DataType="vm:PosicaoViewModel">
 
-    <ScrollView
-        BackgroundColor="#D1F5FD">
+    <ScrollView BackgroundColor="{StaticResource BackgroundColor}">
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <Button
-                x:Name="btnConfig"
-                ImageSource="engrenagem_pequena.png"
-                HorizontalOptions="End"
-                Clicked="btnConfig_Clicked"/>
-            
+            <FlexLayout Direction="Row">
+                <Label FlexLayout.Grow="1" VerticalTextAlignment="Center" MaximumWidthRequest="500" TextColor="White" MaximumHeightRequest="60"/>
+
+                <Button
+                    BackgroundColor="{StaticResource BackgroundColor}"
+                    ImageSource="{Binding SomImage}"
+                    HorizontalOptions="End"
+                    Clicked="btnSom_Clicked"/>
+                <Button
+                    BackgroundColor="{StaticResource BackgroundColor}"
+                    x:Name="btnConfig"
+                    ImageSource="engrenagem_pequena.png"
+                    HorizontalOptions="End"
+                    Clicked="btnConfig_Clicked"/>
+            </FlexLayout>
+
             <Image
-                Source="dotnet_bot.png"
+                Source="{Binding LetraImagem}"
                 HeightRequest="185"
                 Aspect="AspectFit"
                 SemanticProperties.Description="dot net bot in a race car number eight" />
-
             <Label
-                Text="Hello, World!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
-
-            <Label
-                Text="Welcome to &#10;.NET Multi-platform App UI"
+                Text="{Binding LetrasIdentificadasLbl}"
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
-            <Label
-                Text="{Binding Posicao}"
-                Style="{StaticResource SubHeadline}" />
-            <Button
-                x:Name="BluetoothBtn"
-                Text="Connect to Bluetooth" 
-                SemanticProperties.Hint="Connect to bluetooth device"
-                Clicked="ConnectToBluetoothDevice"
-                HorizontalOptions="Fill" />
-
-            <Button
-                x:Name="CharacteristicBluetoothBtn"
-                Text="Get Characteristic Value" 
-                SemanticProperties.Hint="Get Characteristic Value"
-                Clicked="GetCharacteristicValue"
-                HorizontalOptions="Fill" 
-                IsEnabled="False"/>
+                SemanticProperties.Description="Letras identificadas:" />
 
             <Button
                 x:Name="TraduzSinalBtn"
                 Text="Get Letter"
                 SemanticProperties.Hint="Get Letter"
-                Clicked="TraduzSinalBtn_Clicked"
-                HorizontalOptions="Fill"
-                IsEnabled="True"/>
+                Clicked="TraduzSinalBtn_Clicked"  
+                Style="{StaticResource btnStyle}"/>
+
+            <Button
+                 x:Name="TrainingPageBtn"
+                 Text="Learn letter" 
+                 SemanticProperties.Hint="Open training page"
+                 Clicked="btnTraining_Clicked"
+                 Style="{StaticResource btnStyle}"
+                 />
+
         </VerticalStackLayout>
     </ScrollView>
 
