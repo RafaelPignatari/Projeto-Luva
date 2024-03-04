@@ -15,7 +15,10 @@ const int flexPin2 = 39;
 const int flexPin3 = 34;
 const int flexPin4 = 35;
 const int flexPin5 = 32;
+const int piezoPin1 = 33;
+const int piezoPin2 = 25;
 int flexValue1, flexValue2, flexValue3, flexValue4, flexValue5;
+int piezoValue1, piezoValue2;
 
 BLECharacteristic sensores(
   BLEUUID((uint16_t)0x015),
@@ -77,6 +80,8 @@ void atualizaValoresSensores() {
   flexValue3 = analogRead(flexPin3);
   flexValue4 = analogRead(flexPin4);
   flexValue5 = analogRead(flexPin5);
+  piezoValue1 = analogRead(piezoPin1);
+  piezoValue2 = analogRead(piezoPin2);
 }
 
 char* trataValor(float valor) {
@@ -112,7 +117,8 @@ void enviaDados(char* resultado){
 }
 
 void liberaMemoria(char* sensorFlex1, char* sensorFlex2, char* sensorFlex3, char* sensorFlex4, 
-                   char* sensorFlex5, char* sensorAccX, char* sensorAccY, char* resultado) {
+                   char* sensorFlex5, char* sensorAccX, char* sensorAccY, char* sensorPiezo1, char* sensorPiezo2,
+                   char* resultado) {
   free(sensorFlex1);
   free(sensorFlex2);
   free(sensorFlex3);
@@ -120,6 +126,8 @@ void liberaMemoria(char* sensorFlex1, char* sensorFlex2, char* sensorFlex3, char
   free(sensorFlex5);
   free(sensorAccX);
   free(sensorAccY);
+  free(sensorPiezo1);
+  free(sensorPiezo2);
   free(resultado);
 }
 
@@ -134,11 +142,13 @@ void loop() {
     char* sensorFlex5 = trataValor(flexValue5);
     char* sensorAccX = trataValor(mpu6050.getAccAngleX());
     char* sensorAccY = trataValor(mpu6050.getAccAngleY());
+    char* sensorPiezo1 = trataValor(piezoValue1);
+    char* sensorPiezo2 = trataValor(piezoValue2);
 
     // Alocando memória para a string resultante
     char* resultado = (char*)malloc(strlen(sensorFlex1) + strlen(sensorFlex2) + strlen(sensorFlex3) + 
                                     strlen(sensorFlex4) + strlen(sensorFlex5) + strlen(sensorAccX) + 
-                                    strlen(sensorAccY) + 8);  // +7 para o ponto e vírgula e +1 para terminador nulo
+                                    strlen(sensorAccY) + strlen(sensorPiezo1) + strlen(sensorPiezo2) + 10);  // +9 para o ponto e vírgula e +1 para terminador nulo
     
     // Concatenando as strings
     strcpy(resultado, sensorFlex1);
@@ -155,15 +165,19 @@ void loop() {
     strcat(resultado, ";");
     strcat(resultado, sensorAccY);
     strcat(resultado, ";");
+    strcat(resultado, sensorPiezo1);
+    strcat(resultado, ";");
+    strcat(resultado, sensorPiezo2);
+    strcat(resultado, ";");
 
     enviaDados(resultado);
 
     liberaMemoria(sensorFlex1, sensorFlex2, sensorFlex3, 
                   sensorFlex4, sensorFlex5, sensorAccX, 
-                  sensorAccY, resultado);
+                  sensorAccY, sensorPiezo1, sensorPiezo2, resultado);
 
-    delay(500);
+    delay(100);
   }
 
-  delay(50);
+  delay(100);
 }
