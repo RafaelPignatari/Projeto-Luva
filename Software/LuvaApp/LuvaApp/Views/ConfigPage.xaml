@@ -6,7 +6,7 @@
              x:Class="LuvaApp.Views.ConfigPage"             
              Title="Configuração">
     <VerticalStackLayout
-        BackgroundColor="#D1F5FD">
+                    BackgroundColor="{StaticResource BackgroundColor}">
         <VerticalStackLayout>
             <Grid
                 Grid.Row="5"
@@ -110,19 +110,14 @@
             <Button
                 x:Name="btnConfigBluetooth"
                 Text="Configurar Bluetooth"
-                TextColor="White"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                BackgroundColor="#004D85"
+                Style="{StaticResource btnStyle}"
                 Margin="20"
                 Clicked="btnConfigBluetooth_Clicked"/>
             <Button
                 x:Name="btnSalvar"
                 Text="Salvar"
-                TextColor="White"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                BackgroundColor="#004D85"
+                Style="{StaticResource btnStyle}"
+                Margin="20"
                 Clicked="btnSalvar_Clicked"/>            
         </VerticalStackLayout>
     </VerticalStackLayout>

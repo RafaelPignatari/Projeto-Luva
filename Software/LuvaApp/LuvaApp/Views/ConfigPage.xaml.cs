@@ -12,7 +12,7 @@ public partial class ConfigPage : ContentPage
     {
         InitializeComponent();
         
-        ConfigurationModel configurationModel = configurationController.GetConfigurationAsync().Result;
+         ConfigurationModel configurationModel = configurationController.GetConfigurationAsync().Result;
         configurationViewModel = new ConfigurationViewModel(configurationModel);
         BindingContext = configurationViewModel;
     }
