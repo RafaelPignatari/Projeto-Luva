@@ -7,12 +7,6 @@ namespace LuvaApp.Helpers
     {
         private PredictionEngine<OnnxInput, OnnxOutput> _predictionEngine;
 
-        private IAEmbarcadaController()
-        {
-            MLContext mlContext = new MLContext();
-            Task.Run(async() => _predictionEngine = await GetPredictionPipeline(mlContext));
-        }
-
         #region SINGLETON
         private static IAEmbarcadaController _instancia;
 
@@ -55,10 +49,9 @@ namespace LuvaApp.Helpers
 
             try
             {
-                if (_predictionEngine == null)
-                    return "0";
-
+                await IniciaPredictionEngine();
                 var result = _predictionEngine.Predict(entrada);
+
                 return result.Resultado[0].ToString();
             }
             catch (Exception ex)
@@ -68,5 +61,13 @@ namespace LuvaApp.Helpers
             }
         }
 
+        private async Task IniciaPredictionEngine()
+        {
+            if (_predictionEngine == null)
+            {
+                MLContext mlContext = new MLContext();
+                _predictionEngine = await GetPredictionPipeline(mlContext);
+            }
+        }
     }
 }

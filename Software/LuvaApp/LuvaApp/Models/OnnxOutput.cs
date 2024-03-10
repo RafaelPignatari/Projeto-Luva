@@ -9,7 +9,7 @@ namespace LuvaApp.Models
         [ColumnName("probabilities"), OnnxMapType(typeof(Float16), typeof(Single))]
         public float[] Probabilities { get; set; }
 
-        [ColumnName("label"), OnnxMapType(typeof(Int64), typeof(Single))]
-        public Int64[] Resultado { get; set; }
+        [ColumnName("label")]
+        public string[] Resultado { get; set; }
     }
 }

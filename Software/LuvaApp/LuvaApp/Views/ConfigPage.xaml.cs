@@ -11,7 +11,7 @@ public partial class ConfigPage : ContentPage
     {
         InitializeComponent();
         
-         ConfigurationModel configurationModel = ConfigurationController.GetConfigurationAsync().Result;
+        ConfigurationModel configurationModel = ConfigurationController.GetConfigurationAsync().Result;
         configurationViewModel = new ConfigurationViewModel(configurationModel);
         BindingContext = configurationViewModel;
     }
