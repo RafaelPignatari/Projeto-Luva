@@ -7,12 +7,6 @@ namespace LuvaApp.Helpers
     {
         private PredictionEngine<OnnxInput, OnnxOutput> _predictionEngine;
 
-        private IAEmbarcadaController()
-        {
-            MLContext mlContext = new MLContext();
-            Task.Run(async() => _predictionEngine = await GetPredictionPipeline(mlContext));
-        }
-
         #region SINGLETON
         private static IAEmbarcadaController _instancia;
 
@@ -49,23 +43,31 @@ namespace LuvaApp.Helpers
             return mLContext.Model.CreatePredictionEngine<OnnxInput, OnnxOutput>(model);
         }
 
-        public async Task<long> Predicao(OnnxInput entrada)
+        public async Task<string> Predicao(string values)
         {
+            OnnxInput entrada = new OnnxInput { Sensores = values.Split(',').Select(value => float.Parse(value)).ToArray() };
+
             try
             {
-                if (_predictionEngine == null)
-                    return -1;
-
+                await IniciaPredictionEngine();
                 var result = _predictionEngine.Predict(entrada);
 
-                return result.Resultado[0];
+                return result.Resultado[0].ToString();
             }
             catch (Exception ex)
             {
                 //TODO: Adicionar logs
-                return -1;
+                return "0";
             }
         }
 
+        private async Task IniciaPredictionEngine()
+        {
+            if (_predictionEngine == null)
+            {
+                MLContext mlContext = new MLContext();
+                _predictionEngine = await GetPredictionPipeline(mlContext);
+            }
+        }
     }
 }

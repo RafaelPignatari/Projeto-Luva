@@ -8,8 +8,8 @@ namespace LuvaApp
 {
     public partial class MainPage : ContentPage
     {
-        BluetoothController bluetoothController = new BluetoothController();
         PosicaoViewModel _posicaoViewModel;
+        ConfigurationModel? _configurationModel;
 
         public MainPage()
         {
@@ -17,66 +17,47 @@ namespace LuvaApp
 
             _posicaoViewModel = new PosicaoViewModel();
             BindingContext = _posicaoViewModel;
-        }
+            Task.Run(PreencheConfiguracaoModel);
 
-        private async void ConnectToBluetoothDevice(object sender, EventArgs e)
-        {
-            await bluetoothController.AsyncRequestBluetoothPermissions();
-            await bluetoothController.AsyncConnectToDeviceByName("LuvaController");
-
-            TraduzSinalBtn.IsEnabled = true;
-        }
-
-        private async void GetCharacteristicValue(object sender, EventArgs e)
-        {
-            await Task.Run(async() => await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController));        
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
         {
-            TraduzSinalBtn.IsEnabled = false;
-            TraduzSinalBtn.Text = "Atualizando automaticamente predict";
+            if (_configurationModel.Processamento == Models.Enums.EProcessamento.Remoto)
+                PreverRemote();
+            else if (_configurationModel.Processamento == Models.Enums.EProcessamento.Local)
+                PreverLocal();
+        }
+
+        private void PreverRemote()
+        {
             Task.Run(async () =>
             {
-                while (true)
-                {
-                    await MainThread.InvokeOnMainThreadAsync(async () => await bluetoothController.AsyncRequestBluetoothPermissions());
-                    await MainThread.InvokeOnMainThreadAsync(async () => await bluetoothController.AsyncConnectToDeviceByName("LuvaController"));
-                    await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController);
+                string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
+                SetLetter(await APIController.PreverValor(values));
+            });
+        }
 
-                    try
-                    {
-                        TraduzSinalBtn.IsEnabled = true;
-
-                        var recebido = RecepcaoController.Instancia.ObtemUltimoValorRecebido();
-
-                        var input = new OnnxInput
-                        {
-                            Sensores = new float[] { recebido.Flexao2, recebido.Acc_EixoX, recebido.Acc_EixoY },
-                        };
-
-                        var predict = await IAEmbarcadaController.Instancia.Predicao(input);
-                        await MainThread.InvokeOnMainThreadAsync(() => _posicaoViewModel.Posicao = predict);
-                    }
-                    catch (Exception ex)
-                    {
-                        //TODO: Adicionar logs
-                    }
-
-                    Thread.Sleep(50);
-                }
+        private void PreverLocal()
+        {
+            Task.Run(async () =>
+            {
+                string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
+                SetLetter(await IAEmbarcadaController.Instancia.Predicao(values));
             });
         }
 
         private void btnSom_Clicked(object sender, EventArgs e)
         {
             bool novaPosicao  = !_posicaoViewModel.SomImage.EndsWith("1.png");
-            _posicaoViewModel.SomImage = "volume" + Convert.ToInt32(novaPosicao) + ".png";
+            _posicaoViewModel.SomImage = $"volume{Convert.ToInt32(novaPosicao)}.png";
         }
 
-        private void randomLetter()
+        private void SetLetter(string letra)
         {
-            string letraPng  = "letra_" + (char)new Random().Next(97, 123) + ".png";
+            string letraPng  = $"letra_{letra.ToLower()}.png";
             _posicaoViewModel.LetraImagem = letraPng;
         }
 
@@ -88,6 +69,17 @@ namespace LuvaApp
         private void btnTraining_Clicked(object sender, EventArgs e)
         {
             Navigation.PushAsync(new TrainingPage());
+        }
+
+        private async Task PreencheConfiguracaoModel()
+        {
+            _configurationModel = await ConfigurationController.GetConfigurationAsync();
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception exception = e.ExceptionObject as Exception;
+            DisplayAlert("Unhandled Exception", exception?.Message, "OK");
         }
     }
 }
