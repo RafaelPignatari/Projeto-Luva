@@ -25,9 +25,9 @@ namespace LuvaApp
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
         {
-            if (_configurationModel.Processamento == Models.Enums.EProcessamento.Local)
+            if (_configurationModel.Processamento == Models.Enums.EProcessamento.Remoto)
                 PreverRemote();
-            else if (_configurationModel.Processamento == Models.Enums.EProcessamento.Remoto)
+            else if (_configurationModel.Processamento == Models.Enums.EProcessamento.Local)
                 PreverLocal();
         }
 
@@ -45,8 +45,6 @@ namespace LuvaApp
             Task.Run(async () =>
             {
                 string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
-                //string values = "2375,2519,2195,2394,1158,0017,-102,0000,0000,2379,2512,2217,2385,1166,0018,-106,0000,0000,2382,2526,2219,2384,1169,0017,-108,0000,0000,2371,2525,2224,2376,1161,0014,-109,0000,0000,2382,2522,2220,2361";
-
                 SetLetter(await IAEmbarcadaController.Instancia.Predicao(values));
             });
         }
