@@ -4,13 +4,13 @@ from AIHelper.trainModel import trainModel
 
 app = Flask(__name__)
 
-@app.route("/predict")
+@app.route("/predict", methods=['POST'])
 def predict():
     modelToUse = request.get_json()['model']
     valuesToUse = request.get_json()['values']
     return str(predictByModel(modelToUse, valuesToUse)[0])
 
-@app.route('/trainModel')
+@app.route('/trainModel', methods=['POST'])
 def train():    
     modelName = request.get_json()['model']
     accuracy = trainModel(modelName)

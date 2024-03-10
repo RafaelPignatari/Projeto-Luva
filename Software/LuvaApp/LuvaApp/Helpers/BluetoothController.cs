@@ -7,6 +7,27 @@ namespace LuvaApp.Helpers.BluetoothHelper
 {
     public class BluetoothController : IBluetoothController
     {
+        #region SINGLETON
+        private static BluetoothController _instancia;
+        
+        private BluetoothController() { }
+
+        public async static Task<BluetoothController> GetInstance()
+        {
+            if (_instancia == null)
+            {
+                _instancia = new BluetoothController();
+                await EfetuarConexaoBluetooth();
+            }
+            return _instancia;            
+        }
+
+        private static async Task EfetuarConexaoBluetooth()
+        {            
+            await _instancia.AsyncRequestBluetoothPermissions();
+            await _instancia.AsyncConnectToDeviceByName("LuvaController");            
+        }
+        #endregion
         public IDevice? ConnectedDevice { get; set; }
         public IAdapter? Adapter { get; set; }
 

@@ -3,68 +3,48 @@ using LuvaApp.Helpers;
 using LuvaApp.Models;
 using LuvaApp.ViewModels;
 using LuvaApp.Views;
+using LuvaApp.Interfaces;
 
 namespace LuvaApp
 {
     public partial class MainPage : ContentPage
     {
-        BluetoothController bluetoothController = new BluetoothController();
         PosicaoViewModel _posicaoViewModel;
-
+        ConfigurationModel configurationModel;
         public MainPage()
         {
             InitializeComponent();
 
             _posicaoViewModel = new PosicaoViewModel();
             BindingContext = _posicaoViewModel;
-        }
-
-        private async void ConnectToBluetoothDevice(object sender, EventArgs e)
-        {
-            await bluetoothController.AsyncRequestBluetoothPermissions();
-            await bluetoothController.AsyncConnectToDeviceByName("LuvaController");
-
-            TraduzSinalBtn.IsEnabled = true;
-        }
-
-        private async void GetCharacteristicValue(object sender, EventArgs e)
-        {
-            await Task.Run(async() => await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController));        
+            configurationModel = ConfigurationController.GetConfigurationAsync().Result;
         }
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
         {
-            TraduzSinalBtn.IsEnabled = false;
-            TraduzSinalBtn.Text = "Atualizando automaticamente predict";
+            if (configurationModel.Processamento == Models.Enums.EProcessamento.Remoto)
+                PreverRemote();
+            else if (configurationModel.Processamento == Models.Enums.EProcessamento.Local)
+                PreverLocal();
+        }
+
+        private void PreverRemote()
+        {
             Task.Run(async () =>
             {
-                while (true)
-                {
-                    await MainThread.InvokeOnMainThreadAsync(async () => await bluetoothController.AsyncRequestBluetoothPermissions());
-                    await MainThread.InvokeOnMainThreadAsync(async () => await bluetoothController.AsyncConnectToDeviceByName("LuvaController"));
-                    await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController);
+                string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
+                setLetter(await APIController.PreverValor(values));
+            });
+        }
 
-                    try
-                    {
-                        TraduzSinalBtn.IsEnabled = true;
-
-                        var recebido = RecepcaoController.Instancia.ObtemUltimoValorRecebido();
-
-                        var input = new OnnxInput
-                        {
-                            Sensores = new float[] { recebido.Flexao2, recebido.Acc_EixoX, recebido.Acc_EixoY },
-                        };
-
-                        var predict = await IAEmbarcadaController.Instancia.Predicao(input);
-                        await MainThread.InvokeOnMainThreadAsync(() => _posicaoViewModel.Posicao = predict);
-                    }
-                    catch (Exception ex)
-                    {
-                        //TODO: Adicionar logs
-                    }
-
-                    Thread.Sleep(50);
-                }
+        private void PreverLocal()
+        {
+            Task.Run(async () =>
+            {
+                //string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
+                string values = "2375,2519,2195,2394,1158,0017,-102,0000,0000,2379,2512,2217,2385,1166,0018,-106,0000,0000,2382,2526,2219,2384,1169,0017,-108,0000,0000,2371,2525,2224,2376,1161,0014,-109,0000,0000,2382,2522,2220,2361";
+                var a = IAEmbarcadaController.Instancia;
+                setLetter(await IAEmbarcadaController.Instancia.Predicao(values));
             });
         }
 
@@ -74,9 +54,9 @@ namespace LuvaApp
             _posicaoViewModel.SomImage = "volume" + Convert.ToInt32(novaPosicao) + ".png";
         }
 
-        private void randomLetter()
+        private void setLetter(string letra)
         {
-            string letraPng  = "letra_" + (char)new Random().Next(97, 123) + ".png";
+            string letraPng  = "letra_" + letra.ToLower() + ".png";
             _posicaoViewModel.LetraImagem = letraPng;
         }
 

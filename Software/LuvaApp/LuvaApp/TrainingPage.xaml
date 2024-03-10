@@ -11,19 +11,18 @@
                        BackgroundColor="#D1F5FD" 
                        TextColor="Black"/>
             </Frame>
-            <Button
-            x:Name="BluetoothBtn"
-            Text="Connect to Bluetooth" 
-            SemanticProperties.Hint="Connect to bluetooth device"
-            Clicked="ConnectToBluetoothDevice"
-            Style="{StaticResource btnStyle}" />
 
             <Button
             x:Name="CharacteristicBluetoothBtn"
             Text="Começar" 
             Clicked="OnComecarClicked"
             HorizontalOptions="Fill" 
-            IsEnabled="False"
+            Style="{StaticResource btnStyle}"/>
+            <Button
+            x:Name="TrainBtn"
+            Text="Treinar" 
+            Clicked="OnTreinarClicked"
+            HorizontalOptions="Fill" 
             Style="{StaticResource btnStyle}"/>
         </StackLayout>
     </ScrollView>

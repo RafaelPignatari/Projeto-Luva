@@ -4,6 +4,7 @@ import os
 
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 
 from skl2onnx import convert_sklearn
 from skl2onnx.common.data_types import FloatTensorType
@@ -38,11 +39,9 @@ def createOnnx(X_train, model, modelName):
 def setTrainTest():    
     current_directory = os.getcwd()
     df = pd.read_csv(current_directory + '\dataForTrain.csv')
+    df = df.sort_values(by=df.columns[-1])
 
-    train = df.iloc[:-21]
-    test = df.iloc[-21:]
-    train = train.sample(frac=1.0, random_state=42)
-    test = test.sample(frac=1.0, random_state=42)
+    train, test = train_test_split(df, test_size=0.2, stratify=df[df.columns[-1]])
 
     X_train = train.iloc[:, :-1]
     X_test = test.iloc[:, :-1]

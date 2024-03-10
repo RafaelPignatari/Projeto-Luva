@@ -8,7 +8,7 @@ def predictByModel(model, data_to_predict):
     loaded_model = ''
     current_directory = os.getcwd() + '\TrainedModels'
     model = model.lower()
-    if model == 'svc':        
+    if model == 'svm':        
         loaded_model = joblib.load(current_directory + '\svm.joblib')
     elif model == 'random forest':
         loaded_model = joblib.load( current_directory + '\RandomForest.joblib')

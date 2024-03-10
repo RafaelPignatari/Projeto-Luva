@@ -57,6 +57,22 @@ namespace LuvaApp.Helpers
             await luvaCharacteristic.StartUpdatesAsync();
         }
 
+        public async Task<string> GetValues(BluetoothController bluetoothController)
+        {
+            await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController);
+
+            List<string> valuesCapturedList = new List<string>();
+            while (true)
+            {
+                valuesCapturedList = RecepcaoController.ListaRecepcaoCopy.ToList();
+                if (valuesCapturedList.Count == 5)
+                    break;
+            }
+
+            string values = string.Join(",", valuesCapturedList).Replace(",,", ",");
+            return values;
+        }
+
         public SensoresModel ObtemUltimoValorRecebido()
         {
             var penultimoValor = _listaRecepcao[_listaRecepcao.Count - 2];
@@ -105,39 +121,6 @@ namespace LuvaApp.Helpers
             {
                 _listaRecepcao.RemoveAt(0);
             }
-        }
-
-        public static async void sendDataThroughAPI(string dados)
-        {
-            string url = "http://127.0.0.1:5000/receiveValues";
-           var myData = new
-           {
-               values = dados
-           };
-            string jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(myData);
-            StringContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-
-                    HttpResponseMessage response = await client.PostAsync(url, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseBody = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine(responseBody);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Erro: {response.StatusCode}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ocorreu um erro: {ex.Message}");
-                }
-            }
-        }
+        }        
     }
 }

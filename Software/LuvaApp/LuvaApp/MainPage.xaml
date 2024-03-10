@@ -35,7 +35,7 @@
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Letras identificadas:" />
-
+            
             <Button
                 x:Name="TraduzSinalBtn"
                 Text="Get Letter"
