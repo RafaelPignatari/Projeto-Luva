@@ -1,6 +1,5 @@
 from flask import Flask, request, Response, send_file
-from AIHelper.predictModel import predictByModel
-from AIHelper.trainModel import trainModel
+from AIHelper.trainModel import trainModel, predictByModel
 
 app = Flask(__name__)
 

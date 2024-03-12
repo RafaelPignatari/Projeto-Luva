@@ -65,7 +65,7 @@ namespace LuvaApp.Helpers
             while (true)
             {
                 valuesCapturedList = RecepcaoController.ListaRecepcaoCopy.ToList();
-                if (valuesCapturedList.Count == 5)
+                if (valuesCapturedList.Count == 6)
                     break;
             }
 
@@ -117,7 +117,7 @@ namespace LuvaApp.Helpers
 
         private void RemoveValorDaLista()
         {
-            if (_listaRecepcao.Count > 5)
+            if (_listaRecepcao.Count > 6)
             {
                 _listaRecepcao.RemoveAt(0);
             }

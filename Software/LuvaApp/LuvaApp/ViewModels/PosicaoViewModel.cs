@@ -7,8 +7,10 @@ namespace LuvaApp.ViewModels
         [ObservableProperty]
         private string letrasIdentificadasLbl = "Letras identificadas: ";
         [ObservableProperty]
+        private List<string> letrasPassadas = new List<string>();
+        [ObservableProperty]
         private string somImage = "volume1.png";
         [ObservableProperty]
-        private string letraImagem = "letra_a.png";
+        private string letraImagem = ".png";
     }
 }
