@@ -37,8 +37,8 @@ void loop()
   piezoValue1 = analogRead(piezoPin1);
   piezoValue2 = analogRead(piezoPin2);
 
-  ax = mpu6050.getGyroX();
-  ay = mpu6050.getGyroY();
+  ax = mpu6050.getAccAngleX();
+  ay = mpu6050.getAccAngleY();
   az = mpu6050.getGyroZ();
 
   mpu6050.update();
@@ -63,5 +63,5 @@ void loop()
   Serial.print("sensor Piezoeletrico 1: "); Serial.println(piezoValue1); Serial.print("\t");
   Serial.print("sensor Piezoeletrico 2: "); Serial.println(piezoValue2); Serial.print("\t");
   
-  delay(500);
+  delay(100);
 } 
