@@ -15,10 +15,10 @@ const int flexPin2 = 39;
 const int flexPin3 = 34;
 const int flexPin4 = 35;
 const int flexPin5 = 32;
-const int piezoPin1 = 33;
-const int piezoPin2 = 25;
+const int buttonPin1 = 33;
+const int buttonPin2 = 25;
 int flexValue1, flexValue2, flexValue3, flexValue4, flexValue5;
-int piezoValue1, piezoValue2;
+int buttonValue1, buttonValue2;
 
 BLECharacteristic sensores(
   BLEUUID((uint16_t)0x015),
@@ -69,6 +69,8 @@ void setup() {
   Serial.println("Waiting for a Client to connect...");
 
   Wire.begin(21, 22, 9600);
+  pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
   mpu6050.begin();
   mpu6050.calcGyroOffsets(true); // Use essa linha para calibrar o sensor antes de iniciar o programa.
 }
@@ -80,8 +82,8 @@ void atualizaValoresSensores() {
   flexValue3 = analogRead(flexPin3);
   flexValue4 = analogRead(flexPin4);
   flexValue5 = analogRead(flexPin5);
-  piezoValue1 = analogRead(piezoPin1);
-  piezoValue2 = analogRead(piezoPin2);
+  buttonValue1 = digitalRead(buttonPin1);
+  buttonValue2 = digitalRead(buttonPin2);
 }
 
 char* trataValor(float valor) {
@@ -148,14 +150,14 @@ void loop() {
     char* sensorGyrX = trataValor(mpu6050.getGyroX());
     char* sensorGyrY = trataValor(mpu6050.getGyroY());
     char* sensorGyrZ = trataValor(mpu6050.getGyroZ());
-    char* sensorPiezo1 = trataValor(piezoValue1);
-    char* sensorPiezo2 = trataValor(piezoValue2);
+    char* sensorButton1 = trataValor(buttonValue1);
+    char* sensorButton2 = trataValor(buttonValue2);
 
     // Alocando memória para a string resultante
     char* resultado = (char*)malloc(strlen(sensorFlex1) + strlen(sensorFlex2) + strlen(sensorFlex3) + 
                                     strlen(sensorFlex4) + strlen(sensorFlex5) + strlen(sensorGyrX) + 
-                                    strlen(sensorGyrY) + strlen(sensorGyrZ) + strlen(sensorPiezo1) + 
-                                    strlen(sensorAccX) + strlen(sensorAccY) + strlen(sensorPiezo2) + 13);  // +12 para pontos e vírgulas e +1 para terminador nulo
+                                    strlen(sensorGyrY) + strlen(sensorGyrZ) + strlen(sensorButton1) + 
+                                    strlen(sensorAccX) + strlen(sensorAccY) + strlen(sensorButton2) + 13);  // +12 para pontos e vírgulas e +1 para terminador nulo
     
     // Concatenando as strings
     strcpy(resultado, sensorFlex1);
@@ -178,9 +180,9 @@ void loop() {
     strcat(resultado, ";");
     strcat(resultado, sensorGyrZ);
     strcat(resultado, ";");
-    strcat(resultado, sensorPiezo1);
+    strcat(resultado, sensorButton1);
     strcat(resultado, ";");
-    strcat(resultado, sensorPiezo2);
+    strcat(resultado, sensorButton2);
     strcat(resultado, ";");
 
     enviaDados(resultado);
@@ -188,7 +190,7 @@ void loop() {
     liberaMemoria(sensorFlex1, sensorFlex2, sensorFlex3, 
                   sensorFlex4, sensorFlex5, sensorAccX, 
                   sensorAccY, sensorGyrX, sensorGyrY, 
-                  sensorGyrZ, sensorPiezo1, sensorPiezo2, 
+                  sensorGyrZ, sensorButton1, sensorButton2, 
                   resultado);
 
     delay(100);
