@@ -17,8 +17,9 @@ const int flexPin4 = 35;
 const int flexPin5 = 32;
 const int buttonPin1 = 33;
 const int buttonPin2 = 25;
+const int buttonPin3 = 26;
 int flexValue1, flexValue2, flexValue3, flexValue4, flexValue5;
-int buttonValue1, buttonValue2;
+int buttonValue1, buttonValue2, buttonValue3;
 
 BLECharacteristic sensores(
   BLEUUID((uint16_t)0x015),
@@ -84,6 +85,7 @@ void atualizaValoresSensores() {
   flexValue5 = analogRead(flexPin5);
   buttonValue1 = digitalRead(buttonPin1);
   buttonValue2 = digitalRead(buttonPin2);
+  buttonValue3 = digitalRead(buttonPin3);
 }
 
 char* trataValor(float valor) {
@@ -120,7 +122,7 @@ void enviaDados(char* resultado){
 
 void liberaMemoria(char* sensorFlex1, char* sensorFlex2, char* sensorFlex3, char* sensorFlex4, 
                    char* sensorFlex5, char* sensorAccX, char* sensorAccY, char* sensorGyrX, char* sensorGyrY, char* sensorGyrZ,
-                   char* sensorPiezo1, char* sensorPiezo2, char* resultado) {
+                   char* sensorButton1, char* sensorButton2, char* sensorButton3, char* resultado) {
   free(sensorFlex1);
   free(sensorFlex2);
   free(sensorFlex3);
@@ -131,8 +133,9 @@ void liberaMemoria(char* sensorFlex1, char* sensorFlex2, char* sensorFlex3, char
   free(sensorGyrX);
   free(sensorGyrY);
   free(sensorGyrZ);
-  free(sensorPiezo1);
-  free(sensorPiezo2);
+  free(sensorButton1);
+  free(sensorButton2);
+  free(sensorButton3);
   free(resultado);
 }
 
@@ -152,12 +155,14 @@ void loop() {
     char* sensorGyrZ = trataValor(mpu6050.getGyroZ());
     char* sensorButton1 = trataValor(buttonValue1);
     char* sensorButton2 = trataValor(buttonValue2);
+    char* sensorButton3 = trataValor(buttonValue3);
 
     // Alocando memória para a string resultante
     char* resultado = (char*)malloc(strlen(sensorFlex1) + strlen(sensorFlex2) + strlen(sensorFlex3) + 
                                     strlen(sensorFlex4) + strlen(sensorFlex5) + strlen(sensorGyrX) + 
                                     strlen(sensorGyrY) + strlen(sensorGyrZ) + strlen(sensorButton1) + 
-                                    strlen(sensorAccX) + strlen(sensorAccY) + strlen(sensorButton2) + 13);  // +12 para pontos e vírgulas e +1 para terminador nulo
+                                    strlen(sensorAccX) + strlen(sensorAccY) + strlen(sensorButton2) +
+                                    strlen(sensorButton3) + 14);  // +13 para pontos e vírgulas e +1 para terminador nulo
     
     // Concatenando as strings
     strcpy(resultado, sensorFlex1);
@@ -184,6 +189,8 @@ void loop() {
     strcat(resultado, ";");
     strcat(resultado, sensorButton2);
     strcat(resultado, ";");
+    strcat(resultado, sensorButton3);
+    strcat(resultado, ";");
 
     enviaDados(resultado);
 
@@ -191,7 +198,7 @@ void loop() {
                   sensorFlex4, sensorFlex5, sensorAccX, 
                   sensorAccY, sensorGyrX, sensorGyrY, 
                   sensorGyrZ, sensorButton1, sensorButton2, 
-                  resultado);
+                  sensorButton3, resultado);
 
     delay(100);
   }
