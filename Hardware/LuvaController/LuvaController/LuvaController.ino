@@ -72,6 +72,7 @@ void setup() {
   Wire.begin(21, 22, 9600);
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
+  pinMode(buttonPin3, INPUT);
   mpu6050.begin();
   mpu6050.calcGyroOffsets(true); // Use essa linha para calibrar o sensor antes de iniciar o programa.
 }
