@@ -3,6 +3,7 @@ using LuvaApp.Helpers;
 using LuvaApp.Models;
 using LuvaApp.ViewModels;
 using LuvaApp.Views;
+using LuvaApp.Helpers.AlertHelper;
 
 namespace LuvaApp
 {
@@ -35,8 +36,17 @@ namespace LuvaApp
         {
             Task.Run(async () =>
             {
-                string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
-                SetLetter(await APIController.PreverValor(values));
+                bool bleRetornou = false;
+
+                try
+                {
+                    string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
+                    SetLetter(await APIController.PreverValor(values));
+                }
+                catch (Exception ex)
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async() => await DisplayAlert("Erro", ex.Message, "OK"));
+                }
             });
         }
 
@@ -44,8 +54,24 @@ namespace LuvaApp
         {
             Task.Run(async () =>
             {
-                string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
-                SetLetter(await IAEmbarcadaController.Instancia.Predicao(values));
+                bool bleRetornou = false;
+
+                try
+                {
+                    //var alerta = AlertHelper.MontaContentAlerta();
+                    //MainThread.BeginInvokeOnMainThread(async () => await AlertHelper.ShowDialog(this,
+                    //                                                "Conectando ao dispositivo",
+                    //                                                "Aguarde enquanto o aplicativo se conecta ao dispositivo",
+                    //                                                10000, ref bleRetornou));
+                    string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
+                    bleRetornou = true;
+                    SetLetter(await IAEmbarcadaController.Instancia.Predicao(values));
+                }
+                catch (Exception ex)
+                {
+                    bleRetornou = true;
+                    MainThread.BeginInvokeOnMainThread(async() => await DisplayAlert("Erro", ex.Message, "OK"));
+                }
             });
         }
 
@@ -78,8 +104,7 @@ namespace LuvaApp
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception exception = e.ExceptionObject as Exception;
-            DisplayAlert("Unhandled Exception", exception?.Message, "OK");
+            //TODO: Adicionar logs
         }
     }
 }
