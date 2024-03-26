@@ -19,29 +19,49 @@ namespace LuvaApp.Helpers.BluetoothHelper
                 _instancia = new BluetoothController();
                 await EfetuarConexaoBluetooth();
             }
-            return _instancia;            
+
+            return _instancia;
         }
 
         private static async Task EfetuarConexaoBluetooth()
-        {            
+        {
             await _instancia.AsyncRequestBluetoothPermissions();
-            await _instancia.AsyncConnectToDeviceByName("LuvaController");            
+            await _instancia.AsyncConnectToDeviceByName("LuvaController");
         }
+
         #endregion
         public IDevice? ConnectedDevice { get; set; }
         public IAdapter? Adapter { get; set; }
 
         public async Task<IEnumerable<IDevice>> AsyncGetDevices()
         {
-            Adapter = CrossBluetoothLE.Current.Adapter;
-            await Adapter.StartScanningForDevicesAsync();            
-            return Adapter.DiscoveredDevices.Where(device => device.Name != null);
+            IEnumerable<IDevice> dispositivosEncontrados = null;
+
+            await MainThread.InvokeOnMainThreadAsync(async() =>
+            {
+                try
+                {
+                    Adapter = CrossBluetoothLE.Current.Adapter;
+                    await Adapter.StartScanningForDevicesAsync();
+                    dispositivosEncontrados = Adapter.DiscoveredDevices.Where(device => device.Name != null);
+                }
+                catch
+                {
+                    throw new Exception("Erro ao obter dispositivos. O bluetooth está ligado?");
+                }
+            });
+
+            return dispositivosEncontrados;
         }
 
         public async Task AsyncConnectToDeviceByName(string deviceName)
         {
             IEnumerable<IDevice> devicesFound = await AsyncGetDevices();
             ConnectedDevice = devicesFound.FirstOrDefault(device => device.Name == deviceName);
+
+            if (ConnectedDevice == null)
+                throw new Exception("Dispositivo não encontrado: " + deviceName);
+
             await Adapter!.ConnectToDeviceAsync(ConnectedDevice);
         }
 

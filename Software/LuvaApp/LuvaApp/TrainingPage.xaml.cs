@@ -13,11 +13,19 @@ public partial class TrainingPage : ContentPage
 
     private async void OnComecarClicked(object sender, EventArgs e)
     {
-        string letterToTrain = LetterToTrain.Text;
+        try
+        {
+            string letterToTrain = LetterToTrain.Text;
 
-        string value = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance()) + $",{letterToTrain}";
-        APIController.AdicionarDadosParaTreino(value);
-        MainThread.BeginInvokeOnMainThread(() => DisplayAlert("Letter to Train", $"You entered: {letterToTrain}", "OK"));
+            string value = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance()) + $",{letterToTrain}";
+            APIController.AdicionarDadosParaTreino(value);
+
+            MainThread.BeginInvokeOnMainThread(() => DisplayAlert("Letter to Train", $"You entered: {letterToTrain}", "OK"));
+        }
+        catch (Exception ex)
+        {
+            MainThread.BeginInvokeOnMainThread(() => DisplayAlert("Erro", ex.Message, "OK"));
+        }
     }
     private async void OnTreinarClicked(object sender, EventArgs e)
     {
