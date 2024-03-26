@@ -25,7 +25,7 @@ namespace LuvaApp
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
         {
-            if (_configurationModel.Processamento == Models.Enums.EProcessamento.Remoto)
+            if (true)
                 PreverRemote();
             else if (_configurationModel.Processamento == Models.Enums.EProcessamento.Local)
                 PreverLocal();
