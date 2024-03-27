@@ -29,6 +29,6 @@ public partial class TrainingPage : ContentPage
     }
     private async void OnTreinarClicked(object sender, EventArgs e)
     {
-        MainThread.BeginInvokeOnMainThread(async () => DisplayAlert("Modelo treinado", $"Modelo treinado com precisão de {await APIController.TreinarModelo("svm")}", "OK"));
+        MainThread.BeginInvokeOnMainThread(async () => DisplayAlert("Modelo treinado", $"Modelo treinado com precisão de {await APIController.TreinarModelo()}", "OK"));
     }
 }
