@@ -27,7 +27,7 @@
 
             <Image
                 Source="{Binding LetraImagem}"
-                HeightRequest="185"
+                HeightRequest="500"
                 Aspect="AspectFit"
                 SemanticProperties.Description="dot net bot in a race car number eight" />
             <Label
