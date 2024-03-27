@@ -33,7 +33,7 @@ public partial class TrainingPage : ContentPage
             try
             {
                 var precisao = await APIController.TreinarModelo();
-                await DisplayAlert("Modelo treinado", $"Modelo treinado com precisão de {precisao}", "OK");
+                await DisplayAlert("Modelo treinado", $"Modelo treinado com precisï¿½o de {precisao}", "OK");
             }
             catch (Exception ex)
             {
