@@ -1,8 +1,7 @@
 using LuvaApp.Helpers;
 using LuvaApp.Helpers.BluetoothHelper;
-using System.Text;
 
-namespace LuvaApp;
+namespace LuvaApp.Views;
 
 public partial class TrainingPage : ContentPage
 {
