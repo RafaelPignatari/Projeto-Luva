@@ -17,11 +17,17 @@ namespace LuvaApp
             InitializeComponent();
 
             _posicaoViewModel = new PosicaoViewModel();
-            BindingContext = _posicaoViewModel;
-            Task.Run(PreencheConfiguracaoModel);
+            BindingContext = _posicaoViewModel;            
 
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            Task.Run(PreencheConfiguracaoModel);
         }
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
