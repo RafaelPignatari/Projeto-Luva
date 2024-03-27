@@ -21,11 +21,11 @@ namespace LuvaApp.Helpers
             }
         }
 
-        public static async Task<string> TreinarModelo(string model)
+        public static async Task<string> TreinarModelo()
         {
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.PostAsync(URL + "trainModel", SetDadosToJson(model));
+                HttpResponseMessage response = await client.PostAsync(URL + "trainModel", SetDadosToJson());
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("API se escontra indisponível ou valores são inválidos");
 
@@ -41,15 +41,24 @@ namespace LuvaApp.Helpers
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("API se escontra indisponível ou valores são inválidos");
 
-                return await response.Content.ReadAsStringAsync();
+                string returnMessage = await response.Content.ReadAsStringAsync();
+                return GetMostRepeatedWord(returnMessage);
             }
         }
 
-        private static StringContent SetDadosToJson(string dados, string modelSelected = "svm")
+        private static string GetMostRepeatedWord(string message)
+        {
+            string[] words = message.Split(';');
+            var wordGroups = words.GroupBy(w => w);
+            var mostRepeatedWordGroup = wordGroups.OrderByDescending(g => g.Count()).First();
+            return mostRepeatedWordGroup.Key;
+        }
+
+        private static StringContent SetDadosToJson(string dados = "", bool isBestModel = true)
         {
             var myData = new
             {
-                model = modelSelected,
+                isBestModel = isBestModel,
                 values = dados.Split(',').Select(a => a.ToString()).ToArray()
             };
             string jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(myData);
