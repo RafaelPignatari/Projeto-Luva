@@ -41,7 +41,7 @@ namespace LuvaApp
                 try
                 {
                     string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
-                    SetLetter(await APIController.PreverValor(values));
+                    await SetLetter(await APIController.PreverValor(values));
                 }
                 catch (Exception ex)
                 {
@@ -65,7 +65,7 @@ namespace LuvaApp
                     //                                                10000, ref bleRetornou));
                     string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
                     bleRetornou = true;
-                    SetLetter(await IAEmbarcadaController.Instancia.Predicao(values));
+                    await SetLetter(await IAEmbarcadaController.Instancia.Predicao(values));
                 }
                 catch (Exception ex)
                 {
@@ -81,10 +81,18 @@ namespace LuvaApp
             _posicaoViewModel.SomImage = $"volume{Convert.ToInt32(novaPosicao)}.png";
         }
 
-        private void SetLetter(string letra)
+        private async Task SetLetter(string letra)
         {
             string letraPng  = $"letra_{letra.ToLower()}.png";
             _posicaoViewModel.LetraImagem = letraPng;
+
+            if (_posicaoViewModel.SomImage.EndsWith("1.png"))
+                await EmiteSomLetra(letra);
+        }
+
+        private async Task EmiteSomLetra(string letra)
+        {
+            await TextToSpeech.Default.SpeakAsync(letra);
         }
 
         private void btnConfig_Clicked(object sender, EventArgs e)

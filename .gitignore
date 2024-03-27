@@ -11,3 +11,5 @@
 /PredictAPI/GeraOnnx/.ipynb_checkpoints
 /PredictAPI/GeraOnnx/rf_iris.onnx
 /PredictAPI/GeraOnnx/svc.onnx
+/PredictAPI/AIHelper/__pycache__/trainModel.cpython-39.pyc
+/PredictAPI/__pycache__/app.cpython-39.pyc
