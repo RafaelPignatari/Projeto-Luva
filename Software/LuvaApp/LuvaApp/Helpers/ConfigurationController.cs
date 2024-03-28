@@ -5,15 +5,24 @@ namespace LuvaApp.Helpers
 {
     public abstract class ConfigurationController
     {
-        public async static Task<ConfigurationModel?> GetConfigurationAsync()
+        public async static Task<ConfigurationModel> GetConfigurationAsync()
         {
-            string? configurationJson = await SecureStorage.Default.GetAsync(Constantes.CONFIGURATION_KEY_SECURE_STORAGE);
+            try
+            {
+                string configurationJson = await SecureStorage.Default.GetAsync(Constantes.CONFIGURATION_KEY_SECURE_STORAGE);
 
-            if (configurationJson == null)
+                if (configurationJson == null)
+                    return await GetConfigurationDefault();
+
+                var configurationModel = JsonSerializer.Deserialize<ConfigurationModel>(configurationJson);
+
+                return configurationModel;
+            }
+            catch (Exception ex)
+            {
+                //TODO: Adicionar logs.
                 return await GetConfigurationDefault();
-
-            ConfigurationModel? configurationModel = JsonSerializer.Deserialize<ConfigurationModel>(configurationJson);
-            return configurationModel;
+            }
         }
 
         public async static Task SetConfigurationAsync(ConfigurationModel configuration)

@@ -86,7 +86,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="TrainingPage.xaml">
+	  <MauiXaml Update="Views\TrainingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ConfigPage.xaml">

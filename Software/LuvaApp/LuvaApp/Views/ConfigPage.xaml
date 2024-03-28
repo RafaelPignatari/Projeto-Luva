@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LuvaApp.ViewModels"
              x:DataType="vm:ConfigurationViewModel"
-             x:Class="LuvaApp.Views.ConfigPage"             
+             x:Class="LuvaApp.Views.ConfigPage"
              Title="Configuração">
     <VerticalStackLayout
-                    BackgroundColor="{StaticResource BackgroundColor}">
+            BackgroundColor="{StaticResource BackgroundColor}">
         <VerticalStackLayout>
             <Grid
                 Grid.Row="5"

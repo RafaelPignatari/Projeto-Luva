@@ -1,8 +1,7 @@
 using LuvaApp.Helpers;
 using LuvaApp.Helpers.BluetoothHelper;
-using System.Text;
 
-namespace LuvaApp;
+namespace LuvaApp.Views;
 
 public partial class TrainingPage : ContentPage
 {
@@ -27,8 +26,19 @@ public partial class TrainingPage : ContentPage
             MainThread.BeginInvokeOnMainThread(() => DisplayAlert("Erro", ex.Message, "OK"));
         }
     }
-    private async void OnTreinarClicked(object sender, EventArgs e)
+    private void OnTreinarClicked(object sender, EventArgs e)
     {
-        MainThread.BeginInvokeOnMainThread(async () => DisplayAlert("Modelo treinado", $"Modelo treinado com precisão de {await APIController.TreinarModelo()}", "OK"));
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                var precisao = await APIController.TreinarModelo();
+                await DisplayAlert("Modelo treinado", $"Modelo treinado com precisï¿½o de {precisao}", "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", ex.Message, "OK");
+            }
+        });
     }
 }

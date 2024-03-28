@@ -6,14 +6,18 @@ namespace LuvaApp.Views;
 
 public partial class ConfigPage : ContentPage
 {
-    ConfigurationViewModel? configurationViewModel;
     public ConfigPage()
     {
         InitializeComponent();
+
+        Task.Run(ObtemConfigurationViewModel);
         
-        ConfigurationModel configurationModel = ConfigurationController.GetConfigurationAsync().Result;
-        configurationViewModel = new ConfigurationViewModel(configurationModel);
-        BindingContext = configurationViewModel;
+        BindingContext = new ConfigurationViewModel();
+    }
+
+    private async Task ObtemConfigurationViewModel() 
+    {
+        BindingContext = new ConfigurationViewModel(await ConfigurationController.GetConfigurationAsync());        
     }
 
     private async void btnConfigBluetooth_Clicked(object sender, EventArgs e)
@@ -23,6 +27,8 @@ public partial class ConfigPage : ContentPage
 
     private async void btnSalvar_Clicked(object sender, EventArgs e)
     {
+        var configurationViewModel = BindingContext as ConfigurationViewModel;
+
         if (!configurationViewModel.HistoricoAtivo)
             configurationViewModel.PrevisoesExibidasNoHistorico = 0;
 

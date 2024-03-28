@@ -17,11 +17,17 @@ namespace LuvaApp
             InitializeComponent();
 
             _posicaoViewModel = new PosicaoViewModel();
-            BindingContext = _posicaoViewModel;
-            Task.Run(PreencheConfiguracaoModel);
+            BindingContext = _posicaoViewModel;            
 
             AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            Task.Run(PreencheConfiguracaoModel);
         }
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
@@ -95,14 +101,14 @@ namespace LuvaApp
             await TextToSpeech.Default.SpeakAsync(letra);
         }
 
-        private void btnConfig_Clicked(object sender, EventArgs e)
+        private async void btnConfig_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new ConfigPage());
+            await Navigation.PushAsync(new ConfigPage());
         }
 
-        private void btnTraining_Clicked(object sender, EventArgs e)
+        private async void btnTraining_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new TrainingPage());
+            await Navigation.PushAsync(new TrainingPage());
         }
 
         private async Task PreencheConfiguracaoModel()
