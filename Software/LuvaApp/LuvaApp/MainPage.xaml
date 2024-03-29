@@ -28,19 +28,29 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center">
                 <Ellipse
-                         Stroke="Black"
-                         BackgroundColor="White"
-                         StrokeThickness="4"
-                         AbsoluteLayout.LayoutBounds="0, 30"
-                         WidthRequest="250"
-                         HeightRequest="300" />
+                    x:Name="borderEllipse"
+                    Stroke="Black"
+                    BackgroundColor="White"
+                    StrokeThickness="4"
+                    AbsoluteLayout.LayoutBounds="0, 30"
+                    WidthRequest="250"
+                    HeightRequest="300" 
+                    IsVisible="false"/>
                 <Image
+                    x:Name="LetraImagemImg"
                     Source="{Binding LetraImagem}"
                     HeightRequest="300"
                     Aspect="AspectFit" />
+                
             </AbsoluteLayout>
             <Label
-                Text="{Binding LetrasIdentificadasLbl}"
+                x:Name="TextoIdentificadoLbl"
+                Text="{Binding TextoIdentificado}"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1"
+                IsVisible="false" />
+            <Label
+                Text="{Binding LetrasIdentificadas}"
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Letras identificadas:" />

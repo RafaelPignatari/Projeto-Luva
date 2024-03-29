@@ -13,7 +13,7 @@ namespace LuvaApp.ViewModels
         [ObservableProperty]
         private bool historicoAtivo = false;
         [ObservableProperty]
-        private int previsoesExibidasNoHistorico = 50;
+        private int previsoesExibidasNoHistorico = 5;
 
         public ConfigurationViewModel() {}
 

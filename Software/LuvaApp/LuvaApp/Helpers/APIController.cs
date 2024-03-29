@@ -49,7 +49,7 @@ namespace LuvaApp.Helpers
             return mostRepeatedWordGroup.Key;
         }
 
-        private static StringContent SetDadosToJson(string dados = "", bool isBestModel = true)
+        private static StringContent SetDadosToJson(string dados = "", bool isBestModel = false)
         {
             var myData = new
             {
