@@ -6,13 +6,13 @@
              x:Class="LuvaApp.Views.ConfigPage"
              Title="Configuração">
     <VerticalStackLayout
-            BackgroundColor="{StaticResource BackgroundColor}">
+            BackgroundColor="{StaticResource BackgroundClaro}">
         <VerticalStackLayout>
             <Grid
                 Grid.Row="5"
                 Grid.Column="2"
                 Padding="25, 25, 25, 25"
-                RowDefinitions="*, *, *, *, *"
+                RowDefinitions="*, *, *, *"
                 ColumnDefinitions="*, *">
                 <Label 
                     Text="Processamento:"
@@ -22,102 +22,84 @@
                     FontSize="Body"
                     Grid.Row="0"
                     Grid.Column="0"/>
-                <Picker
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    BackgroundColor="Black"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="5"                    
-                    SelectedIndex="{Binding Processamento, Mode=TwoWay}">                    
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Local</x:String>
-                            <x:String>Remoto</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
-                <Label 
-                    Text="Emissão de som:"
-                    TextColor="Black"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Start" 
-                    FontSize="Body"
-                    Grid.Row="1"
-                    Grid.Column="0"/>
-                <Picker
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    BackgroundColor="Black"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="5"
-                    SelectedIndex="{Binding EmissaoSom}">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Manual</x:String>
-                            <x:String>Automático</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>                
+                
+                <Border Style="{StaticResource BordaStyle}"
+                        Grid.Row="0"
+                        Grid.Column="1">
+                    <Picker
+                        Style="{StaticResource PickerStyle}"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        SelectedIndex="{Binding Processamento, Mode=TwoWay}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Local</x:String>
+                                <x:String>Remoto</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Border>
+                    
                 <Label 
                     Text="Exibir Histórico:"
                     TextColor="Black"
                     VerticalOptions="Center" 
                     HorizontalOptions="Start" 
                     FontSize="Body"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Grid.Column="0"/>
-                <Picker
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    BackgroundColor="Black"
-                    Margin="5"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    SelectedIndex="{Binding HistoricoAtivo}"
-                    >
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Desligado</x:String>
-                            <x:String>Ligado</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                <Border Style="{StaticResource BordaStyle}"
+                        Grid.Row="1"
+                        Grid.Column="1">
+                    <Picker
+                        Style="{StaticResource PickerStyle}"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        SelectedIndex="{Binding HistoricoAtivo}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Desligado</x:String>
+                                <x:String>Ligado</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Border>
 
                 <Label 
-                    Text="Número de exibições:"
+                    Text="Quantidade de registros:"
                     TextColor="Black"
                     VerticalOptions="Center" 
                     HorizontalOptions="Start" 
                     FontSize="Body"
-                    Grid.Row="3"
+                    Grid.Row="2"
                     Grid.Column="0"
                     IsVisible="{Binding HistoricoAtivo}"/>
-                <Entry
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    BackgroundColor="Black"
-                    Margin="5"
-                    WidthRequest="70"
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Keyboard="Numeric"
-                    Text="{Binding PrevisoesExibidasNoHistorico}"
-                    IsVisible="{Binding HistoricoAtivo}"/>
+
+                <Border Style="{StaticResource BordaStyle}"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        IsVisible="{Binding HistoricoAtivo}">
+                    <Entry
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill"
+                        Keyboard="Numeric"
+                        BackgroundColor="{StaticResource BackgroundClaro}"
+                        TextColor="Black"
+                        HorizontalTextAlignment="Center"
+                        MaxLength="3"
+                        Text="{Binding PrevisoesExibidasNoHistorico}"/>
+                </Border>
             </Grid>
             
             <Button
                 x:Name="btnConfigBluetooth"
                 Text="Configurar Bluetooth"
-                Style="{StaticResource btnStyle}"
-                Margin="20"
+                Style="{StaticResource btnAzulStyle}"
                 Clicked="btnConfigBluetooth_Clicked"/>
             <Button
                 x:Name="btnSalvar"
                 Text="Salvar"
-                Style="{StaticResource btnStyle}"
-                Margin="20"
+                Style="{StaticResource btnAzulStyle}"
                 Clicked="btnSalvar_Clicked"/>            
         </VerticalStackLayout>
     </VerticalStackLayout>

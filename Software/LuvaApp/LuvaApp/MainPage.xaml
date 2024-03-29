@@ -3,33 +3,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LuvaApp.ViewModels"
              x:Class="LuvaApp.MainPage"
-             x:DataType="vm:PosicaoViewModel">
+             x:DataType="vm:PosicaoViewModel"
+             Shell.NavBarIsVisible="False">
 
     <ScrollView BackgroundColor="{StaticResource BackgroundColor}">
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <FlexLayout Direction="Row">
-                <Label FlexLayout.Grow="1" VerticalTextAlignment="Center" MaximumWidthRequest="500" TextColor="White" MaximumHeightRequest="60"/>
-
+            <FlexLayout Direction="Row"
+                        JustifyContent="End"
+                        Padding="5">
                 <Button
                     BackgroundColor="{StaticResource BackgroundColor}"
                     ImageSource="{Binding SomImage}"
-                    HorizontalOptions="End"
                     Clicked="btnSom_Clicked"/>
                 <Button
                     BackgroundColor="{StaticResource BackgroundColor}"
                     x:Name="btnConfig"
                     ImageSource="engrenagem_pequena.png"
-                    HorizontalOptions="End"
                     Clicked="btnConfig_Clicked"/>
             </FlexLayout>
 
-            <Image
-                Source="{Binding LetraImagem}"
-                HeightRequest="500"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a race car number eight" />
+            <AbsoluteLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                <Ellipse
+                         Stroke="Black"
+                         BackgroundColor="White"
+                         StrokeThickness="4"
+                         AbsoluteLayout.LayoutBounds="0, 30"
+                         WidthRequest="250"
+                         HeightRequest="300" />
+                <Image
+                    Source="letra_a.png"
+                    HeightRequest="300"
+                    Aspect="AspectFit" />
+            </AbsoluteLayout>
             <Label
                 Text="{Binding LetrasIdentificadasLbl}"
                 Style="{StaticResource SubHeadline}"
@@ -38,18 +47,18 @@
             
             <Button
                 x:Name="TraduzSinalBtn"
-                Text="Get Letter"
-                SemanticProperties.Hint="Get Letter"
+                Text="Obter Letra"
+                SemanticProperties.Hint="Obter Letra"
                 Clicked="TraduzSinalBtn_Clicked"  
-                Style="{StaticResource btnStyle}"/>
+                Style="{StaticResource btnBrancoStyle}"/>
 
             <Button
                  x:Name="TrainingPageBtn"
-                 Text="Learn letter" 
-                 SemanticProperties.Hint="Open training page"
+                 Text="Treinamento" 
+                 SemanticProperties.Hint="Abrir página de treinamento"
                  Clicked="btnTraining_Clicked"
-                 Style="{StaticResource btnStyle}"
-                 />
+                 Style="{StaticResource btnBrancoStyle}"
+                 Margin="0, 0, 0, 20"/>
 
         </VerticalStackLayout>
     </ScrollView>

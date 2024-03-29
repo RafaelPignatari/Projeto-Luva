@@ -30,7 +30,7 @@ public partial class ConfigPage : ContentPage
         var configurationViewModel = BindingContext as ConfigurationViewModel;
 
         if (!configurationViewModel.HistoricoAtivo)
-            configurationViewModel.PrevisoesExibidasNoHistorico = 0;
+            configurationViewModel.PrevisoesExibidasNoHistorico = 50;
 
         await ConfigurationController.SetConfigurationAsync(new ConfigurationModel(configurationViewModel));
 

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LuvaApp.Views.TrainingPage"
              Title="TrainingPage">
-    <ScrollView BackgroundColor="{StaticResource BackgroundColor}">
+    <ScrollView BackgroundColor="{StaticResource BackgroundClaro}">
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" >
             <Frame BorderColor="Black" CornerRadius="2" Padding="2" >
                 <Entry x:Name="LetterToTrain" 
@@ -13,17 +13,17 @@
             </Frame>
 
             <Button
-            x:Name="CharacteristicBluetoothBtn"
-            Text="Começar" 
-            Clicked="OnComecarClicked"
-            HorizontalOptions="Fill" 
-            Style="{StaticResource btnStyle}"/>
+                x:Name="CharacteristicBluetoothBtn"
+                Text="Começar" 
+                Clicked="OnComecarClicked"
+                HorizontalOptions="Fill" 
+                Style="{StaticResource btnAzulStyle}"/>
             <Button
-            x:Name="TrainBtn"
-            Text="Treinar" 
-            Clicked="OnTreinarClicked"
-            HorizontalOptions="Fill" 
-            Style="{StaticResource btnStyle}"/>
+                x:Name="TrainBtn"
+                Text="Treinar" 
+                Clicked="OnTreinarClicked"
+                HorizontalOptions="Fill" 
+                Style="{StaticResource btnAzulStyle}"/>
         </StackLayout>
     </ScrollView>
 

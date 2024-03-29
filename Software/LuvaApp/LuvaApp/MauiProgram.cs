@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using LuvaApp.Handlers;
+using Microsoft.Extensions.Logging;
 
 namespace LuvaApp
 {
@@ -18,6 +19,8 @@ namespace LuvaApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            PickerHandler.CustomizaPicker();
+            EntryHandler.CustomizaEntry();
 
             return builder.Build();
         }
