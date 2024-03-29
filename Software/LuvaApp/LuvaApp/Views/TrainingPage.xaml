@@ -2,19 +2,25 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LuvaApp.Views.TrainingPage"
-             Title="TrainingPage">
-    <ScrollView BackgroundColor="{StaticResource BackgroundClaro}">
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" >
-            <Frame BorderColor="Black" CornerRadius="2" Padding="2" >
+             Title="TrainingPage"
+             BackgroundColor="{StaticResource BackgroundClaro}">
+    <VerticalStackLayout BackgroundColor="{StaticResource BackgroundClaro}"
+                         VerticalOptions="Center">
+        <VerticalStackLayout
+            HorizontalOptions="Center">
+            <Border Style="{StaticResource BordaStyle}">
                 <Entry x:Name="LetterToTrain" 
+                       VerticalOptions="Fill"
+                       HorizontalOptions="Fill"
                        Placeholder="Digite a Letra para identificar" 
                        BackgroundColor="#D1F5FD" 
-                       TextColor="Black"/>
-            </Frame>
+                       TextColor="Black"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
 
             <Button
                 x:Name="CharacteristicBluetoothBtn"
-                Text="Começar" 
+                Text="Enviar Dados" 
                 Clicked="OnComecarClicked"
                 HorizontalOptions="Fill" 
                 Style="{StaticResource btnAzulStyle}"/>
@@ -24,7 +30,7 @@
                 Clicked="OnTreinarClicked"
                 HorizontalOptions="Fill" 
                 Style="{StaticResource btnAzulStyle}"/>
-        </StackLayout>
-    </ScrollView>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
 
 </ContentPage>
