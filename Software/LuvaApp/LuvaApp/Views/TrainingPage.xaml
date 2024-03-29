@@ -2,29 +2,52 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LuvaApp.Views.TrainingPage"
-             Title="TrainingPage">
-    <ScrollView BackgroundColor="{StaticResource BackgroundColor}">
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" >
-            <Frame BorderColor="Black" CornerRadius="2" Padding="2" >
+             Shell.NavBarIsVisible="False">
+    <VerticalStackLayout 
+        BackgroundColor="{StaticResource BackgroundClaro}"
+        VerticalOptions="Fill">
+        <Border
+            Stroke="Black"
+            Padding="1"
+            HeightRequest="50"> 
+            <HorizontalStackLayout
+                BackgroundColor="{StaticResource BackgroundColor}"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill">
+                <Label
+                    Text="🏋️ Treinamento"
+                    FontSize="30"
+                    TextColor="Black"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center"/>
+            </HorizontalStackLayout>
+        </Border>
+
+        <VerticalStackLayout 
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+            <Border Style="{StaticResource BordaStyle}"
+                    HorizontalOptions="Center"
+                    Margin="0, 300, 0, 0">
                 <Entry x:Name="LetterToTrain" 
+                       VerticalOptions="Fill"
+                       HorizontalOptions="Fill"
                        Placeholder="Digite a Letra para identificar" 
                        BackgroundColor="#D1F5FD" 
-                       TextColor="Black"/>
-            </Frame>
+                       TextColor="Black"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
 
             <Button
-            x:Name="CharacteristicBluetoothBtn"
-            Text="Começar" 
-            Clicked="OnComecarClicked"
-            HorizontalOptions="Fill" 
-            Style="{StaticResource btnStyle}"/>
+                x:Name="CharacteristicBluetoothBtn"
+                Text="Enviar Dados" 
+                Clicked="OnComecarClicked"
+                Style="{StaticResource btnAzulStyle}"/>
             <Button
-            x:Name="TrainBtn"
-            Text="Treinar" 
-            Clicked="OnTreinarClicked"
-            HorizontalOptions="Fill" 
-            Style="{StaticResource btnStyle}"/>
-        </StackLayout>
-    </ScrollView>
-
+                x:Name="TrainBtn"
+                Text="Treinar" 
+                Clicked="OnTreinarClicked"
+                Style="{StaticResource btnAzulStyle}"/>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
 </ContentPage>
