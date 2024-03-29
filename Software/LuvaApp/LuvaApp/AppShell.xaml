@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:LuvaApp"
     Shell.FlyoutBehavior="Disabled"
-    Title="LuvaApp">
+    Title="LuvaApp"
+    BackgroundColor="{StaticResource BackgroundColor}">
 
     <ShellContent
         Title="Home"

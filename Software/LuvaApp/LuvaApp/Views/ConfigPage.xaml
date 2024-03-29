@@ -4,9 +4,26 @@
              xmlns:vm="clr-namespace:LuvaApp.ViewModels"
              x:DataType="vm:ConfigurationViewModel"
              x:Class="LuvaApp.Views.ConfigPage"
-             Title="Configuração">
+             Shell.NavBarIsVisible="False">
     <VerticalStackLayout
             BackgroundColor="{StaticResource BackgroundClaro}">
+        <Border
+            Stroke="Black"
+            Padding="1"
+            HeightRequest="50">
+            <HorizontalStackLayout
+                BackgroundColor="{StaticResource BackgroundColor}"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill">
+                <Label
+                    Text="⚙️ Configuração"
+                    FontSize="30"
+                    TextColor="Black"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center"/>
+            </HorizontalStackLayout>
+        </Border>
+        
         <VerticalStackLayout>
             <Grid
                 Grid.Row="5"
