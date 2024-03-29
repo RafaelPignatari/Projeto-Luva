@@ -5,9 +5,11 @@ namespace LuvaApp.ViewModels
     internal partial class PosicaoViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string letrasIdentificadasLbl = "Letras identificadas: ";
+        private string letrasIdentificadas = "Previsões passadas: ";
         [ObservableProperty]
-        private List<string> letrasPassadas = new List<string>();
+        private string textoIdentificado = "";
+        [ObservableProperty]
+        private List<string> previsoesPassadas = new List<string>();
         [ObservableProperty]
         private string somImage = "volume1.png";
         [ObservableProperty]

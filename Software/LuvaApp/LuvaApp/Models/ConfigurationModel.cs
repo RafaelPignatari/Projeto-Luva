@@ -8,7 +8,7 @@ namespace LuvaApp.Models
         public EProcessamento Processamento { get; set; } = EProcessamento.Local;
         public EEmissaoSom EmissaoSom { get; set; } = EEmissaoSom.Automatico;
         public bool HistoricoAtivo { get; set; } = false;
-        public int PrevisoesExibidasNoHistorico { get; set; } = 0;
+        public int PrevisoesExibidasNoHistorico { get; set; } = 5;
 
         public ConfigurationModel() { }
         public ConfigurationModel(ConfigurationViewModel configurationViewModel)
