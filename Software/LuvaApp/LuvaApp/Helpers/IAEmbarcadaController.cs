@@ -1,11 +1,12 @@
 ﻿using LuvaApp.Models;
-using Microsoft.ML;
+using Microsoft.ML.OnnxRuntime;
 
 namespace LuvaApp.Helpers
 {
     public class IAEmbarcadaController
     {
-        private PredictionEngine<OnnxInput, OnnxOutput> _predictionEngine;
+        private InferenceSession _sessaoMelhorAlgoritmo;
+        private List<InferenceSession> _sessoesAlgoritmos;
 
         #region SINGLETON
         private static IAEmbarcadaController _instancia;
@@ -26,33 +27,35 @@ namespace LuvaApp.Helpers
         }
         #endregion
 
-        private async Task<PredictionEngine<OnnxInput, OnnxOutput>> GetPredictionPipeline(MLContext mLContext)
+        private string EfetuaPredict(OnnxInput entrada, bool melhorModelo)
         {
-            var inputColumns = new string[] { "float_input" };
-            var outputColumns = new string[] { "label", "probabilities" };
-            var caminho = await ArquivoHelper.TrataArquivosModelo();
+            //Se for o melhor modelo, já retorna de cara.
+            if (melhorModelo)
+                return ObtemValorFromModel(_sessaoMelhorAlgoritmo, entrada.Sensores);
 
-            var onnxPredictionPipeline = mLContext.Transforms
-                                                  .ApplyOnnxModel(outputColumnNames: outputColumns,
-                                                                  inputColumnNames: inputColumns,
-                                                                  caminho);
-            var emptyDv = mLContext.Data.LoadFromEnumerable(new OnnxInput[] { });
+            //Caso contrário, fazemos as tratativas para cada modelo.
+            string mensagem = string.Empty;
 
-            var model = onnxPredictionPipeline.Fit(emptyDv);
+            foreach (var sessao in _sessoesAlgoritmos)
+            {
+                mensagem += ObtemValorFromModel(sessao, entrada.Sensores);
+                mensagem += ";";
+            }
 
-            return mLContext.Model.CreatePredictionEngine<OnnxInput, OnnxOutput>(model);
+            //Remove o último ;
+            mensagem = mensagem.Remove(mensagem.Length - 1);
+
+            return MetodosShared.ValoresMaisRepetidas(mensagem);
         }
 
-        public async Task<string> Predicao(string values)
+        public async Task<string> Predicao(string values, bool melhorModelo)
         {
             OnnxInput entrada = new OnnxInput { Sensores = values.Split(',').Select(value => float.Parse(value)).ToArray() };
 
             try
             {
-                await IniciaPredictionEngine();
-                var result = _predictionEngine.Predict(entrada);
-
-                return result.Resultado[0].ToString();
+                await IniciaPredictionEngine(melhorModelo);
+                return EfetuaPredict(entrada, melhorModelo);
             }
             catch (Exception ex)
             {
@@ -61,12 +64,63 @@ namespace LuvaApp.Helpers
             }
         }
 
-        private async Task IniciaPredictionEngine()
+        private string ObtemValorFromModel(InferenceSession sessao, float[] input)
         {
-            if (_predictionEngine == null)
+            string retorno;
+            using var inputOrtValue = OrtValue.CreateTensorValueFromMemory(NormalizeHelper.NormalizaDados(input),
+                                                                           new long[] { 1, 69 });
+
+            var inputs = new Dictionary<string, OrtValue>
             {
-                MLContext mlContext = new MLContext();
-                _predictionEngine = await GetPredictionPipeline(mlContext);
+                { "float_input", inputOrtValue }
+            };
+
+            using var runOptions = new RunOptions();
+            using (var outputs = sessao.Run(runOptions, inputs, sessao.OutputNames))
+            {
+                var output = outputs.First();
+                retorno = output.GetStringTensorAsArray()[0];
+            }
+
+            return retorno;
+        }
+
+        private async Task IniciaPredictionEngine(bool melhorModelo)
+        {
+            if (_sessaoMelhorAlgoritmo == null)
+            {
+                if (melhorModelo)
+                {
+                    await PreparaParaInferenceMelhor();
+                }
+                else
+                {
+                    await PreparaParaInferenceAll();
+                }
+            }
+        }
+
+        private async Task PreparaParaInferenceMelhor()
+        {
+            if (_sessaoMelhorAlgoritmo == null)
+            {
+                var caminho = await ArquivoHelper.TrataArquivoRandomForest();
+
+                _sessaoMelhorAlgoritmo = new InferenceSession(caminho);
+            }
+        }
+
+        private async Task PreparaParaInferenceAll()
+        {
+            if (_sessoesAlgoritmos == null)
+            {
+                _sessoesAlgoritmos = new List<InferenceSession>();
+                var caminhos = await ArquivoHelper.TrataArquivosModelo();
+
+                foreach (var caminho in caminhos)
+                {
+                    _sessoesAlgoritmos.Add(new InferenceSession(caminho));
+                }
             }
         }
     }

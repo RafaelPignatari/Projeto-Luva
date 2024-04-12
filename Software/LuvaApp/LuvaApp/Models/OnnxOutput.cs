@@ -6,10 +6,11 @@ namespace LuvaApp.Models
 {
     public class OnnxOutput
     {
-        [ColumnName("probabilities"), OnnxMapType(typeof(Float16), typeof(Single))]
-        public float[] Probabilities { get; set; }
-
-        [ColumnName("label")]
+        [ColumnName("output_label")]
         public string[] Resultado { get; set; }
+
+        [ColumnName("output_probability")]
+        [OnnxSequenceType(typeof(IDictionary<string, float>))]
+        public IEnumerable<IDictionary<string, float>> Probabilities { get; set; }
     }
 }

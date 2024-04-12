@@ -5,7 +5,7 @@ namespace LuvaApp.Models
     public class OnnxInput
     {
         [ColumnName("float_input")]
-        [VectorType(40)]
+        [VectorType(69)]
         public float[] Sensores { get; set; }
     }
 }

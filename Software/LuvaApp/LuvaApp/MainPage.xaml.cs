@@ -26,7 +26,7 @@ namespace LuvaApp
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
+            NormalizeHelper.VerificaEPreencheVariaveisIniciais();
             Task.Run(PreencheConfiguracaoModel);
         }
 
@@ -45,7 +45,7 @@ namespace LuvaApp
                 try
                 {
                     string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
-                    await SetPrediction(await APIController.PreverValor(values));
+                    await SetPrediction(await APIController.PreverValor(values, _configurationModel.MelhorModelo));
                 }
                 catch (Exception ex)
                 {
@@ -61,7 +61,7 @@ namespace LuvaApp
                 try
                 {
                     string values = await RecepcaoController.Instancia.GetValues(await BluetoothController.GetInstance());
-                    await SetPrediction(await IAEmbarcadaController.Instancia.Predicao(values));
+                    await SetPrediction(await IAEmbarcadaController.Instancia.Predicao(values, _configurationModel.MelhorModelo));
                 }
                 catch (Exception ex)
                 {
