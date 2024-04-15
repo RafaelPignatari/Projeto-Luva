@@ -14,6 +14,8 @@ namespace LuvaApp.ViewModels
         private bool historicoAtivo = false;
         [ObservableProperty]
         private int previsoesExibidasNoHistorico = 5;
+        [ObservableProperty]
+        private bool melhorModelo = false;
 
         public ConfigurationViewModel() {}
 
@@ -23,6 +25,7 @@ namespace LuvaApp.ViewModels
             emissaoSom = (int)configurationModel.EmissaoSom;
             historicoAtivo = configurationModel.HistoricoAtivo;
             previsoesExibidasNoHistorico = configurationModel.PrevisoesExibidasNoHistorico;
+            melhorModelo = configurationModel.MelhorModelo;
         }
     }
 }
