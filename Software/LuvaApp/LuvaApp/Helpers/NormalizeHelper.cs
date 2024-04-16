@@ -26,7 +26,7 @@ namespace LuvaApp.Helpers
         {
             float[] dadosNormalizados = new float[dados.Length];
 
-            for (int i = 0; i < dados.Length; i++)
+            for (int i = 0; i < _media.Length; i++)
             {
                 dadosNormalizados[i] = (dados[i] - _media[i]) / _desvioPadrao[i];
             }

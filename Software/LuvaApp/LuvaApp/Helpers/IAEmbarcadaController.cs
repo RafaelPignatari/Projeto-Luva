@@ -50,7 +50,9 @@ namespace LuvaApp.Helpers
 
         public async Task<string> Predicao(string values, bool melhorModelo)
         {
-            OnnxInput entrada = new OnnxInput { Sensores = values.Split(',').Select(value => float.Parse(value)).ToArray() };
+            var valoresSeparados = values.Split(',');
+            var valoresSeparadosFloat = valoresSeparados.Where(v => v != string.Empty).Select(float.Parse).ToArray();
+            OnnxInput entrada = new OnnxInput { Sensores = valoresSeparadosFloat};
 
             try
             {
