@@ -8,7 +8,7 @@ namespace LuvaApp.Helpers.BluetoothHelper
     public class BluetoothController : IBluetoothController
     {
         #region SINGLETON
-        private static BluetoothController _instancia;
+        private static BluetoothController? _instancia;
         
         private BluetoothController() { }
 
@@ -47,6 +47,7 @@ namespace LuvaApp.Helpers.BluetoothHelper
                 }
                 catch
                 {
+                    _instancia = null;
                     throw new Exception("Erro ao obter dispositivos. O bluetooth está ligado?");
                 }
             });
@@ -60,9 +61,24 @@ namespace LuvaApp.Helpers.BluetoothHelper
             ConnectedDevice = devicesFound.FirstOrDefault(device => device.Name == deviceName);
 
             if (ConnectedDevice == null)
+            {
+                _instancia = null;
                 throw new Exception("Dispositivo não encontrado: " + deviceName);
+            }
 
-            await Adapter!.ConnectToDeviceAsync(ConnectedDevice);
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                try
+                {
+                    await Adapter.DisconnectDeviceAsync(ConnectedDevice);
+                    await Adapter.ConnectToDeviceAsync(ConnectedDevice);
+                }
+                catch
+                {
+                    _instancia = null;
+                    throw new Exception("Erro ao conectar ao dispositivo: " + deviceName);
+                }
+            });
         }
 
         public void DisconnectFromDevice()
@@ -73,7 +89,10 @@ namespace LuvaApp.Helpers.BluetoothHelper
 
         public async Task AsyncRequestBluetoothPermissions()
         {
-            await Permissions.RequestAsync<BluetoothPermissions>();
+            var resultado = await MainThread.InvokeOnMainThreadAsync(Permissions.RequestAsync<BluetoothPermissions>);
+
+            if (resultado != PermissionStatus.Granted)
+                _instancia = null;
         }
     }
 }

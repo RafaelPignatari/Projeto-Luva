@@ -32,6 +32,9 @@ namespace LuvaApp
 
         private void TraduzSinalBtn_Clicked(object sender, EventArgs e)
         {
+            TraduzSinalBtn.IsEnabled = false;
+            TraduzSinalBtn.Text = "Traduzindo...";
+
             if (_configurationModel.Processamento == Models.Enums.EProcessamento.Remoto)
                 PreverRemote();
             else if (_configurationModel.Processamento == Models.Enums.EProcessamento.Local)
@@ -51,6 +54,12 @@ namespace LuvaApp
                 {
                     await MainThread.InvokeOnMainThreadAsync(async() => await DisplayAlert("Erro", ex.Message, "OK"));
                 }
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    TraduzSinalBtn.IsEnabled = true;
+                    TraduzSinalBtn.Text = "Traduzir sinal";
+                });
             });
         }
 
@@ -67,6 +76,12 @@ namespace LuvaApp
                 {
                     MainThread.BeginInvokeOnMainThread(async() => await DisplayAlert("Erro", ex.Message, "OK"));
                 }
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    TraduzSinalBtn.IsEnabled = true;
+                    TraduzSinalBtn.Text = "Traduzir sinal";
+                });
             });
         }
 

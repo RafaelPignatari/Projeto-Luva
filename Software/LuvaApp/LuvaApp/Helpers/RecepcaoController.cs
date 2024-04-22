@@ -2,6 +2,7 @@
 using LuvaApp.Models;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
+using System.Diagnostics;
 using System.Text;
 
 namespace LuvaApp.Helpers
@@ -19,6 +20,7 @@ namespace LuvaApp.Helpers
         }
 
         private static List<string> _listaRecepcao;
+        private static bool _recepcaoIniciada = false;
 
         #region SINGLETON
         private static RecepcaoController _instancia;
@@ -47,22 +49,30 @@ namespace LuvaApp.Helpers
 
         public async Task IniciaRecepcao(BluetoothController bluetoothController)
         {
-            IService luvaService = await bluetoothController.ConnectedDevice.GetServiceAsync(Guid.Parse("00000015-0000-1000-8000-00805F9B34FB"));
-            ICharacteristic luvaCharacteristic = (await luvaService.GetCharacteristicsAsync())[0];
+            if (!_recepcaoIniciada)
+            {
+                IService luvaService = await bluetoothController.ConnectedDevice.GetServiceAsync(Guid.Parse("00000015-0000-1000-8000-00805F9B34FB"));
+                ICharacteristic luvaCharacteristic = (await luvaService.GetCharacteristicsAsync())[0];
 
-            _listaRecepcao = new List<string>();
-            luvaCharacteristic.ValueUpdated -= ValueUpdatedHandler;
-            luvaCharacteristic.ValueUpdated += ValueUpdatedHandler;
+                _listaRecepcao = new List<string>();
+                luvaCharacteristic.ValueUpdated -= ValueUpdatedHandler;
+                luvaCharacteristic.ValueUpdated += ValueUpdatedHandler;
 
-            await luvaCharacteristic.StartUpdatesAsync();
+                await luvaCharacteristic.StartUpdatesAsync();
+                _recepcaoIniciada = true;
+            }            
         }
 
         public async Task<string> GetValues(BluetoothController bluetoothController)
         {
             await RecepcaoController.Instancia.IniciaRecepcao(bluetoothController);
+            RecepcaoController.Instancia.LimpaListaRecepcao();
 
             List<string> valuesCapturedList = new List<string>();
-            while (true)
+            var swTimeout = new Stopwatch();
+            swTimeout.Start();
+
+            while (swTimeout.ElapsedMilliseconds < 30000)
             {
                 valuesCapturedList = RecepcaoController.ListaRecepcaoCopy.ToList();
                 if (valuesCapturedList.Count == 6)
@@ -122,5 +132,10 @@ namespace LuvaApp.Helpers
                 _listaRecepcao.RemoveAt(0);
             }
         }        
+
+        private void LimpaListaRecepcao()
+        {
+            _listaRecepcao.Clear();
+        }
     }
 }
