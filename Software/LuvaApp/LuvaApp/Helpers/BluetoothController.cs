@@ -22,11 +22,28 @@ namespace LuvaApp.Helpers.BluetoothHelper
 
             return _instancia;
         }
+        public async static Task<BluetoothController> GetInstance2()
+        {
+            if (_instancia == null)
+            {
+                _instancia = new BluetoothController();
+                await EfetuarConexaoBluetooth2();
+            }
+
+            return _instancia;
+        }
+
 
         private static async Task EfetuarConexaoBluetooth()
         {
-            await _instancia.AsyncRequestBluetoothPermissions();
-            await _instancia.AsyncConnectToDeviceByName("LuvaController");
+            await _instancia.AsyncRequestBluetoothPermissions(); //solicita permissão para utilizar bluetooth do dispositivo
+            //Aqui deveria receber input de usuário sobre dispositivo escolhido
+            await _instancia.AsyncConnectToDeviceByName("LuvaController"); //conecta ao dispositivo LuvaController
+        }
+
+        private static async Task EfetuarConexaoBluetooth2()
+        {
+            await _instancia.AsyncRequestBluetoothPermissions(); //solicita permissão para utilizar bluetooth do dispositivo
         }
 
         #endregion
@@ -41,9 +58,10 @@ namespace LuvaApp.Helpers.BluetoothHelper
             {
                 try
                 {
-                    Adapter = CrossBluetoothLE.Current.Adapter;
-                    await Adapter.StartScanningForDevicesAsync();
+                    Adapter = CrossBluetoothLE.Current.Adapter; 
+                    await Adapter.StartScanningForDevicesAsync(); 
                     dispositivosEncontrados = Adapter.DiscoveredDevices.Where(device => device.Name != null);
+                    //costuma vir dispositivo nulo?
                 }
                 catch
                 {
@@ -56,8 +74,10 @@ namespace LuvaApp.Helpers.BluetoothHelper
 
         public async Task AsyncConnectToDeviceByName(string deviceName)
         {
-            IEnumerable<IDevice> devicesFound = await AsyncGetDevices();
+            IEnumerable<IDevice> devicesFound = await AsyncGetDevices(); //Com o adaptador busca dispositivos bluetooth em que nome != nulo
+
             ConnectedDevice = devicesFound.FirstOrDefault(device => device.Name == deviceName);
+            //método LINQ
 
             if (ConnectedDevice == null)
                 throw new Exception("Dispositivo não encontrado: " + deviceName);
@@ -65,6 +85,16 @@ namespace LuvaApp.Helpers.BluetoothHelper
             await Adapter!.ConnectToDeviceAsync(ConnectedDevice);
         }
 
+        public async Task AsyncConnectToDeviceByName2(string deviceName, IEnumerable<IDevice> devicesFound)
+        {
+            ConnectedDevice = devicesFound.FirstOrDefault(device => device.Name == deviceName);
+          
+            if (ConnectedDevice == null)
+                throw new Exception("Dispositivo não encontrado: " + deviceName);
+
+            await Adapter!.ConnectToDeviceAsync(ConnectedDevice);
+        }
+              
         public void DisconnectFromDevice()
         {
             ConnectedDevice!.Dispose();
@@ -73,7 +103,12 @@ namespace LuvaApp.Helpers.BluetoothHelper
 
         public async Task AsyncRequestBluetoothPermissions()
         {
-            await Permissions.RequestAsync<BluetoothPermissions>();
+            PermissionStatus status = await Permissions.RequestAsync<BluetoothPermissions>();
+
+            if (status == PermissionStatus.Granted)
+            {
+                //permitido
+            }
         }
     }
 }
