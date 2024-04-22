@@ -4,7 +4,9 @@ namespace LuvaApp.Helpers
 {
     internal class APIController
     {
-        const string URL = "http://127.0.0.1:5000/";
+        const string URL = "https://luvareconhecimento.azurewebsites.net/";
+        //Para rodar a API localmente.
+        //const string URL = "http://localhost:5000/";
 
         public static async void AdicionarDadosParaTreino(string dados)
         {

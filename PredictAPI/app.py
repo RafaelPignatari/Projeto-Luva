@@ -24,7 +24,7 @@ def clear_data():
 
 @app.route('/download')
 def download_csv():
-    csv_file_path = 'dataForTrain.csv'
+    csv_file_path = 'Dados/dataForTrain.csv'
 
     with open(csv_file_path, 'r') as file:
         csv_data = file.read()
@@ -50,11 +50,11 @@ def write_on_file(values):
     if(cleanedValues[-1] == ','):
         return
     
-    f = open("dataForTrain.csv", "a")
+    f = open("Dados/dataForTrain.csv", "a")
     f.write(cleanedValues)
     f.write("\n")
     f.close()
 
 def clear_file():
-    with open("dataForTrain.csv", 'w') as file:
+    with open("Dados/dataForTrain.csv", 'w') as file:
         file.write('')
