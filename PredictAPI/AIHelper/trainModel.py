@@ -81,7 +81,7 @@ def createOnnx(X_train, model, modelName):
     
 def setTrainTest():    
     current_directory = os.getcwd()
-    df = pd.read_csv(current_directory + '\dataForTrain.csv')
+    df = pd.read_csv(current_directory + '/Dados/dataForTrain.csv')
     df = df.sort_values(by=df.columns[-1])
 
     train, test = train_test_split(df, test_size=0.2, random_state=101, stratify=df[df.columns[-1]])
