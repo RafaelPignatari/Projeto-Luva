@@ -119,19 +119,10 @@ namespace LuvaApp.Helpers.BluetoothHelper
 
         public async Task AsyncRequestBluetoothPermissions()
         {
-<<<<<<< HEAD
             var resultado = await MainThread.InvokeOnMainThreadAsync(Permissions.RequestAsync<BluetoothPermissions>);
 
             if (resultado != PermissionStatus.Granted)
                 _instancia = null;
-=======
-            PermissionStatus status = await Permissions.RequestAsync<BluetoothPermissions>();
-
-            if (status == PermissionStatus.Granted)
-            {
-                //permitido
-            }
->>>>>>> telaBluetooth
         }
     }
 }

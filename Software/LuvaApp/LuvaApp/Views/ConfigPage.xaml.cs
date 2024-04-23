@@ -22,7 +22,7 @@ public partial class ConfigPage : ContentPage
 
     private async void btnConfigBluetooth_Clicked(object sender, EventArgs e)
     {
-        //TODO: Navigate to Bluetoth configuration
+        await Navigation.PushAsync(new BluetoothPage());
     }
 
     private async void btnSalvar_Clicked(object sender, EventArgs e)
