@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace LuvaApp.Helpers
 {
@@ -34,11 +35,16 @@ namespace LuvaApp.Helpers
         {
             using (HttpClient client = new HttpClient())
             {
+
+                Stopwatch a = new Stopwatch();
+                a.Start();
                 HttpResponseMessage response = await client.PostAsync(URL + "predict", SetDadosToJson(dados, melhorModelo));
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("API se escontra indisponível ou valores são inválidos");
 
                 string returnMessage = await response.Content.ReadAsStringAsync();
+                a.Stop();
+
                 return MetodosShared.ValoresMaisRepetidas(returnMessage);
             }
         }

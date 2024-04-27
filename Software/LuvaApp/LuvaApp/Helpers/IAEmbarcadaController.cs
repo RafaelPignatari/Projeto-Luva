@@ -1,5 +1,6 @@
 ﻿using LuvaApp.Models;
 using Microsoft.ML.OnnxRuntime;
+using System.Diagnostics;
 
 namespace LuvaApp.Helpers
 {
@@ -56,8 +57,14 @@ namespace LuvaApp.Helpers
 
             try
             {
+
+                Stopwatch a = new Stopwatch();
+                a.Start();
                 await IniciaPredictionEngine(melhorModelo);
-                return EfetuaPredict(entrada, melhorModelo);
+                var v = EfetuaPredict(entrada, melhorModelo);
+
+                a.Stop();
+                return v;
             }
             catch (Exception ex)
             {
